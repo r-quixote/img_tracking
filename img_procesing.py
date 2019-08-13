@@ -3,6 +3,9 @@ import cv2
 import os
 import matplotlib.pyplot as plt
 import pylab as p
+import traceback
+import time
+from stat import ST_MTIME
 
 def get_ROI(img):
     print("\nuse `space` or `enter` to finish selection")
@@ -72,6 +75,37 @@ def color_filter(img):
     cv2.namedWindow("no blue", cv2.WINDOW_NORMAL) 
     cv2.imshow("no blue", res)
     return res 
+
+def get_orig_path(file_path):
+    """
+    will only work if both in same directroy:
+    "...\8\side_croped" AND "...\8\side"
+    """
+    try:
+        base_folder = file_path.split("_croped")[0]
+        cur_file_name = file_path.rsplit("\\",1)[1]
+        file_numb = cur_file_name.split("_")[0]
+        full_or_file_path = base_folder + "\\DSC_"+ file_numb + ".jpg"
+       
+    except IndexError as err:
+        traceback.print_tb(err.__traceback__)
+        print(err)
+        print("check the names of the folders")
+        return "EEROR"
+    except FileNotFoundError as err:
+        traceback.print_tb(err.__traceback__)
+        print(err)
+        print("check the names of the folders")
+        return "EEROR"
+    return full_or_file_path
+
+def get_time(file_path):
+    if "CROPED" in file_path:
+        file_path = get_orig_path(file_path)
+        if file_path == "EEROR":
+            return("path time not found")
+    STAT = os.stat(file_path)
+    return time.strftime('%d-%m %H:%M', time.localtime(STAT[ST_MTIME]))
 
 
     

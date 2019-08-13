@@ -3,12 +3,14 @@ import sys
 import os.path
 import re
 import progress_bar
+import img_procesing
 
 # Save tracked objects rois
-def save_result_rois(output_folder, boxes, bbox_init, #ground_truth_bbox,
-                     tracker_types, init, image_color_format,
-                     object_name, file_name, output_path, first_tiral):
+def save_result_rois(output_folder, boxes, bbox_init, tracker_types, init, 
+                     image_color_format, object_name, file_name, 
+                     output_path, first_tiral):
     # Create directory to save
+    pic_time = img_procesing.get_time(file_name)
     dirName = os.path.dirname(output_folder)
     videoName = os.path.splitext(os.path.basename(output_folder))
     dirName = dirName + "\\" + output_path #9_small_Results_tip1"
@@ -20,7 +22,7 @@ def save_result_rois(output_folder, boxes, bbox_init, #ground_truth_bbox,
 
     # Create files and save init box as first line
     if init:
-        # Save tracers init roi
+        # Save trackers init roi
         for i, new_box in enumerate(tracker_types):
             # roi file path
             path_tracker_rois = dirName + "\\" + tracker_types[i] + '.txt'
@@ -31,7 +33,7 @@ def save_result_rois(output_folder, boxes, bbox_init, #ground_truth_bbox,
                 my_file = open(path_tracker_rois, 'a')
             # write bbox init
             if bbox_init:
-                my_file.writelines(", ".join([str(s) for s in list(bbox_init)]) +", "+ file_name + "\n")
+                my_file.writelines(", ".join([str(s) for s in list(bbox_init)]) +", "+ file_name +", "+ pic_time + "\n")
 
                 # close file
                 my_file.close()
@@ -52,8 +54,8 @@ def save_result_rois(output_folder, boxes, bbox_init, #ground_truth_bbox,
         # roi file path
         path_tracker_rois = dirName + "\\" + tracker_types[i] + '.txt'
         with open(path_tracker_rois, "a") as my_file:
-            my_file.writelines(", ".join([str(s) for s in list(new_box)]) +", "+ file_name + "\n")
-            my_file.close()
+            my_file.writelines(", ".join([str(s) for s in list(new_box)]) +", "+ file_name +", "+ pic_time + "\n")
+            
 
     return path_tracker_rois
 
@@ -357,7 +359,6 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
     video_out = create_video_results(video_or_folder_name, frame, image_color_format, object_name, output_path)
 
     # save current rois from all trackers to txt files
-#    ground_truth_bbox = get_ground_truth_roi_from_list(gt_bbox_list, 0)
     path_tracker_rois = save_result_rois(video_or_folder_name, [], bbox_init, #ground_truth_bbox, 
                      tracker_types, True, image_color_format, object_name, 
                      f_name, output_path, first_tiral)
@@ -408,7 +409,7 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
 
             i_frame += 1
         except KeyboardInterrupt:
-            print("\nKeyboard Interrupt -caught")
+            print("\nCaught Keyboard Interrupt")
             print(i_frame)
             break
         
@@ -443,7 +444,7 @@ def main():
     # path with videos or files
     video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\fluo playing\8\side_croped_5"
     output_path = r"8_croped_track_side"
-    object_name = 'Tip_5'
+    object_name = 'Tip_5_test'
 
     #####################################################################################################################    
     print("\nstart tracking: ")

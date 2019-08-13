@@ -10,8 +10,8 @@ import progress_bar
 import time
 import numpy as np
 from stat import ST_MTIME
-from PIL import Image
 import traceback
+#from PIL import Image ## for gif
 
 def get_orig_path(file_path):
     """
@@ -91,7 +91,7 @@ def create_video(input_folder_path, outvid_path, fps):
     vid = cv2.VideoWriter(outvid_path, fourcc, fps, size, is_color)
     
     t = time.perf_counter()
-    frames = []
+#    frames = [] ## for gif saving
     try:
         for i in range(0, int(len(imgs_lst))):
             
@@ -115,11 +115,11 @@ def create_video(input_folder_path, outvid_path, fps):
             
             draw_on_img(img, get_time(image_file)) ## add time stamp
             
-            #save as gif
-            if i%4 ==0:
-                img4 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                im_pil = Image.fromarray(img4)
-                frames.append(im_pil)
+#            #save as gif
+#            if i%4 ==0:
+#                img4 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+#                im_pil = Image.fromarray(img4)
+#                frames.append(im_pil)
     # =========================================================================
     
             #show img while processing
@@ -130,7 +130,6 @@ def create_video(input_folder_path, outvid_path, fps):
             vid.write(img)
             
             ##just for progress tracking:
-            
             perc = i/len(imgs_lst)
             if perc >0:
                 delt = time.perf_counter() - t
@@ -140,18 +139,14 @@ def create_video(input_folder_path, outvid_path, fps):
                     estimate = str(int(estimate/60))+" min"
                 else: estimate = str(estimate) + " sec"
                 progress_bar.update_progress_bar(perc, " time left ~ " + estimate)
-            
-    #        if percentge % 1 == 0:
-    #            if curr_perc!= percentge:
-    #                curr_perc = percentge
-    #                print(str(percentge) + "%")
+
         progress_bar.update_progress_bar(1, "\nDone")   
     except KeyboardInterrupt:
         print("cought: Keyboard Interrupt") 
     
     
     
-    
+     ## for gif saving
 #    frames[0].save(r'C:\Users\YasmineMnb\Desktop\2_test.gif', format='GIF', 
 #                  append_images=frames[1:], save_all=True, duration=100, loop=0)
     
@@ -165,10 +160,9 @@ outvid_path = r"C:\Users\YasmineMnb\Desktop\normal+nonBlue1.avi"
 create_video(input_folder_path, outvid_path, 34.0) 
 
     
-#%% Vid2Im
-
-# =============================================================================
-# 
+#%% 
+# ======== Vid2Im ============================================================= 
+#
 # vidcap = cv2.VideoCapture(r"C:\Users\YasmineMnb\Desktop\for show\lab meeting\s3.mp4")
 # success,image = vidcap.read()
 # cnt = 0
@@ -185,13 +179,9 @@ create_video(input_folder_path, outvid_path, 34.0)
 #     #  print('Read a new frame: ', success)
 #     cnt += 1
 #     success,image = vidcap.read()
-#     
-#     
+# 
 #     cv2.imwrite(r"C:\Users\YasmineMnb\Desktop\test2\frame%s.jpg" % name, image)     # save frame as JPEG file      
 # 
-# 
-#   
-#   
 # =============================================================================
 
     
