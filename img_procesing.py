@@ -72,18 +72,6 @@ def color_filter(img):
     cv2.namedWindow("no blue", cv2.WINDOW_NORMAL) 
     cv2.imshow("no blue", res)
     return res 
+
+
     
-#%%
-img_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\2_top\DSC_0581.JPG"
-img = cv2.imread(img_path)
-ROI = get_ROI(img)
-croped_img = crop(img, ROI[0], ROI[1], ROI[3], ROI[2], "croped")
-#fluo_only  = remove_blue(croped_img)
-
-color_filter(croped_img)
-#%%
-
-
-p.imshow(croped_img[:,:,0], vmin = 0, vmax = 255) ##use this to find the color range!
-
-
