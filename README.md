@@ -1,1 +1,3 @@
-# tracking
+# cropping for folder and convert imgs to video 
+
+in the testing env...
