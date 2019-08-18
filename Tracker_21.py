@@ -427,6 +427,8 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
                      tracker_types, True, image_color_format, object_name,
                      f_name, output_path, first_tiral)
 
+
+
     i_frame = tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
                  image_color_format, multi_tracker,video_or_folder_name,
                  tracker_types, object_name, output_path, first_tiral,
@@ -454,7 +456,7 @@ def main():
     #%%
     # Simple example
     run_images_from_folder = True
-    frame_to_start = 200  # in the range: [0, number of frames in video-1]
+    frame_to_start = 0  # in the range: [0, number of frames in video-1]
     first_tiral = True # in order to continue from last point
 
     # Set up which trackers to run # 'BOOSTING', doesn't work for some reason
@@ -467,9 +469,9 @@ def main():
     bbox_input_roi = []
 
     # path with videos or files
-    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\fluo playing\8\side_croped_5"
-    output_path = r"8_croped_track_side_TEST"
-    object_name = 'Tip_2'
+    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
+    output_path = r"9_croped_track_side_TEST"
+    object_name = 'Tip_3'
 
     #####################################################################################################################
     print("\nstart tracking: ")
