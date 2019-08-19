@@ -77,7 +77,6 @@ def create_video_results(video_or_folder_name, frame, image_color_format, object
     # out = cv2.VideoWriter(save_video_name, fourcc, 20.0, (640, 480))
     return video_out
 
-
 # create list of colors to use to show trackers
 def get_box_colors():
     colors = []
