@@ -278,6 +278,9 @@ while(1):
     else:
         print(k) # else print its value
 
+p = 112
+d = 100
+a = 97
 
 
 

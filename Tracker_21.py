@@ -4,6 +4,7 @@ import os.path
 import re
 import progress_bar
 import img_procesing
+import manual_tracking
 
 # Save tracked objects rois
 def save_result_rois(output_folder, boxes, bbox_init, tracker_types, init,
@@ -38,15 +39,15 @@ def save_result_rois(output_folder, boxes, bbox_init, tracker_types, init,
                 # close file
                 my_file.close()
 
-        # Save ground truth init roi
-        path_gt_rois = dirName + "\\GT.txt"
-
-        # create tracker file
-        my_file = open(path_gt_rois, 'w+')
-        print("rois will be saved to: " + my_file.name +"\n"+ ("\n" + 50*"##")*2 + "\n")
-
-        # close file
-        my_file.close()
+#        # Save ground truth init roi
+#        path_gt_rois = dirName + "\\GT.txt"
+#
+#        # create tracker file
+#        my_file = open(path_gt_rois, 'w+')
+#        print("rois will be saved to: " + my_file.name +"\n"+ ("\n" + 50*"##")*2 + "\n")
+#
+#        # close file
+#        my_file.close()
         return path_tracker_rois
 
     # Append files and save current box
@@ -55,7 +56,6 @@ def save_result_rois(output_folder, boxes, bbox_init, tracker_types, init,
         path_tracker_rois = dirName + "\\" + tracker_types[i] + '.txt'
         with open(path_tracker_rois, "a") as my_file:
             my_file.writelines(", ".join([str(s) for s in list(new_box)]) +", "+ file_name +", "+ pic_time + "\n")
-
 
     return path_tracker_rois
 
@@ -68,8 +68,8 @@ def create_video_results(video_or_folder_name, frame, image_color_format, object
     dirName = dirName + "\\" + output_path#"9_small_Results_tip1"
     if not os.path.isdir(dirName):
         os.mkdir(dirName)
-    save_video_name = dirName + "\\" + videoName[
-        0] + "_Opencv2Multitrackers" + "_" + image_color_format + "_" + object_name + ".avi"
+    save_video_name = dirName + "\\" + videoName[0] + \
+    "_Opencv2Multitrackers" + "_" + image_color_format + "_" + object_name + ".avi"
     fourcc = cv2.VideoWriter_fourcc(*"XVID")
     frame_height, frame_width, layers = frame.shape
     video_out = cv2.VideoWriter(save_video_name, fourcc, 24.0, (frame_width, frame_height))
@@ -255,6 +255,7 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
                  video_out, colors = get_box_colors()):
         # loop through frames
     i_frame = frame_to_start
+    print(i_frame)
     while True:
         try:
             ok, frame, f_name = load_image_from_file_or_video(run_images_from_folder, video_files, i_frame, video,
@@ -265,7 +266,6 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
             # get updated location of objects in subsequent frames
             # start_time = time.time()  # start time of the loop
             ok, boxes = multi_tracker.update(frame)
-
             # if lost tracking break
             if not ok:
                 print("\nLost it at -", i_frame)
@@ -289,8 +289,11 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
 
             # Exit if ESC pressed
             k = cv2.waitKey(1) & 0xff
-            if k == 27:
+            if k == 27: # Esc key
                 print("\nCaught ESC")
+                break
+            if k == 112: # p key
+                print("\nPaused, go do some manual work!\n last one was", i_frame)
                 break
 
             # Update progress bar
@@ -306,37 +309,7 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
 
         except ValueError:
             break
-    return i_frame
-
-
-
-# =============================================================================
-# def thresh_per_chanel(img, chan, MIN=0 ,MAX=255, win_name = "chanel"):
-#     """try thresholding per RGB chanel"""
-#     c = chan
-#     c[np.where(chan<MIN)]=0
-#     c[np.where(chan>=MAX)]=255
-# #    if win_name != "chanel":
-# #        cv2.namedWindow(win_name, cv2.WINDOW_NORMAL)
-# #        cv2.imshow(win_name, c)
-# #        cv2.waitKey(1)
-#     return c
-#
-# def filter_for_10(frame):
-#
-#     b, g, r = cv2.split(frame)
-#
-#     vb = thresh_per_chanel(frame, b, 30 ,30, win_name = "blue")
-#     vg = thresh_per_chanel(frame, g, 0 ,10, win_name = "green")
-#     vr = thresh_per_chanel(frame, r, 0 ,10, win_name = "RED")
-#
-#     merge = cv2.merge((vb,vg,vr))
-#
-# #    cv2.namedWindow("nice", cv2.WINDOW_NORMAL)
-# #    cv2.imshow("nice", merge)
-#     return merge
-#
-# =============================================================================
+    return i_frame, k
 
 # Run tracker according to tracking params. Display result on images
 def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_name, frame_to_start,
@@ -427,22 +400,43 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
                      tracker_types, True, image_color_format, object_name,
                      f_name, output_path, first_tiral)
 
+    i_frame = frame_to_start
+    while i_frame < len(video_files):
+        # Auto tracking
+        i_frame, k  = tracker_loop(i_frame, run_images_from_folder, video_files, video,
+                     image_color_format, multi_tracker,video_or_folder_name,
+                     tracker_types, object_name, output_path, first_tiral,
+                     # first_tiral is mine and for difrence between "a" and "w" writing!
+                     video_out, colors = get_box_colors())
+        # Esc
+        if k == 27:
+            break
+        # Manual tracking
+        elif k == 112: # p key
+            if run_images_from_folder == True:
+                i_frame, manual_k = manual_tracking.loop_through_imgs(video_or_folder_name, path_tracker_rois, i_frame)
+            else:
+                print("Nope... can't track manualy with video yet")
+                break
+            # back to Auto tracking
+            if manual_k == 27: #if Esc Key from the tracker continue Auto tracker
 
+                multi_tracker = cv2.MultiTracker_create()
 
-    i_frame = tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
-                 image_color_format, multi_tracker,video_or_folder_name,
-                 tracker_types, object_name, output_path, first_tiral,
-                 # first_tiral is mine and for difrence between "a" and "w" writing!
-                 video_out, colors = get_box_colors())
+                ok, frame, f_name = load_image_from_file_or_video(run_images_from_folder,
+                                                      video_files, i_frame,
+                                                      video, image_color_format)
+                # Get initial bounding box from user input or ground truth
+                bbox_init = get_initial_bounding_box(bounding_box_input_type, bbox_input_roi, i_frame, frame)
+                cv2.destroyAllWindows()
+                # Initialize MultiTracker
+                for tracker_type in tracker_types:
+                    print(tracker_type)
+                    multi_tracker.add(create_tracker(tracker_type), frame, bbox_init)
+                path_tracker_rois = save_result_rois(video_or_folder_name, [], bbox_init,
+                                                     tracker_types, True, image_color_format, object_name,
+                                                     f_name, output_path, first_tiral = False)
 
-# ===================== 2DO...  ===============================================
-#
-#       add manual tracking here
-#
-#       if manual tracking is done - go back to looping.
-#       (probably best to loop between those 2..)
-#
-# =============================================================================
 
     percent_done = round(i_frame / len(video_files))
     progress_bar.update_progress_bar(percent_done, str(i_frame))

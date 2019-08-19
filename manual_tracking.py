@@ -1,0 +1,162 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Aug 18 16:25:05 2019
+
+@author: YasmineMnb
+"""
+
+import os
+import cv2
+import numpy as np
+import img_procesing
+
+
+
+def load_points_from_tracker_file(points_file):
+    points_dct = {}
+    with open (points_file, "r") as tracker_hist_data:
+        for line in tracker_hist_data:
+            dots = (line.split(", C")[0]).split(", ")
+            dots = list(map(float, dots))
+            # the tracker saves the rectangle and not the center dot
+            x = (int(dots[0] + dots[2]/2))
+            y = (int(dots[1] + dots[3]/2))
+            file_name = line.split(",")[-2].split("\\")[-1]
+            points_dct[file_name] = ((x,y),"Auto")
+        # save a backup of the original points_file
+        back_up_name = points_file.strip(".txt") + "_BACKUP.txt"
+        with open (back_up_name, "w") as backup:
+            backup.write(tracker_hist_data.read())
+    return points_dct
+
+def add_previous_points(points_dct, img,curr_pic_name):
+    points_lst = []
+    for i in sorted(points_dct):
+        points_lst.append(points_dct[i][0])
+    pts = np.array(points_lst, np.int32)
+    cv2.polylines(img,[pts],False,(0,55,255), 2)
+    cv2.namedWindow("Tracking", cv2.WINDOW_NORMAL)
+    cv2.imshow("Tracking", img)
+    return img
+
+def click_event(event, x, y, flags, param ):
+    # what to do with which mous function -
+    # param = [curr_pic, img, points, original_img]
+    curr_pic_name = param[0]
+    if event == cv2.EVENT_LBUTTONDOWN: ##left click:
+        print(x,y)
+        param[2][curr_pic_name] = ((x,y),"Manual")
+        drawing_copy = param[1].copy()
+        drawing_copy = cv2.circle(drawing_copy, (x, y), 1, (0, 255, 0), -1)
+        cv2.imshow("Tracking", drawing_copy)
+        cv2.waitKey(1)
+
+    elif event == cv2.EVENT_RBUTTONDOWN: ## right click:
+        print("clean")
+        param[2][curr_pic_name] = (-1,-1)
+        param[1] = param[3]
+        cv2.imshow("Tracking", param[1])
+        cv2.waitKey(1)
+
+def clickable_pic_loop(img, curr_pic, i, points_dct, folder_path):
+    original_img = cv2.imread(folder_path + "\\" + curr_pic)
+    img = cv2.imread(folder_path + "\\" + curr_pic)
+    img = add_previous_points(points_dct, img, curr_pic)
+    cv2.imshow("Tracking", img)
+    while True:
+        cv2.setMouseCallback("Tracking", click_event, param = [curr_pic, img, points_dct, original_img])
+
+        k=cv2.waitKey(1) & 0xFF
+        if k==52: #4 key(numpad left)
+            break
+        elif k==54: #6 key(numpad right)
+            break
+        elif k==27: #Esc key(numpad right)
+            break
+        elif k==13: #Enter key (if used the trackbar)
+            break
+    i = cv2.getTrackbarPos("trackbar", "Tracking")
+    return k, i
+
+def trackbar_func(val):
+    #can't escape an empty func for - createTrackbar
+    pass
+
+
+def save_added_points(points_dct, points_file, folder_path):
+    """
+    will only make changes to the points manualy added
+    """
+    #%
+    line = ""
+    for i in sorted(points_dct):
+
+        if points_dct[i][1] == "Manual":
+            point = points_dct[i][0]
+            full_img_path = folder_path + "\\" + i
+            box_size = 40
+            box_x = point[0]-box_size/2
+            box_y = point[1]-box_size/2
+            img_time = img_procesing.get_time(full_img_path)
+            line = ', '.join(map(str, [box_x, box_y, box_size, box_size, full_img_path, img_time, "manual"]))
+        #    line += "\n"
+            with open(points_file, "a") as out_file:
+                out_file.write(line)
+                out_file.write("\n")
+
+
+
+def loop_through_imgs(folder_path, points_file, i = 0):
+    # list of imgs in the folder
+    pic_lst = os.listdir(folder_path)
+    # try loading exicting points from points_file
+    try:
+        points_dct = load_points_from_tracker_file(points_file)
+    except FileNotFoundError:
+        print("no such file?\n points are saved to empty dict")
+        points_dct = {}
+    # creat the window
+    cv2.namedWindow("Tracking", cv2.WINDOW_NORMAL)
+    cv2.createTrackbar("trackbar", "Tracking" , 0, len(pic_lst), trackbar_func)
+    #actual loop for the folder
+    while i < len(pic_lst):
+        curr_pic = pic_lst[i]
+        img = cv2.imread(folder_path + "\\" + curr_pic)
+
+        # update Trackbar and add points colected so far
+        cv2.setTrackbarPos("trackbar", "Tracking", i)
+
+        # open curr_pic for clicking
+        k,i = clickable_pic_loop(img,curr_pic, i, points_dct, folder_path)
+
+        # how to continue:
+        if k==27:
+            print("you stoped the manual collection")
+            break
+        elif k==54: # 6 key(numpad right) (NEXT)
+            i += 1
+        elif k==52: # 4 key(numpad left) (BACK)
+            i -= 1
+        elif k==13: # Enter key (if used the trackbar)
+            continue
+
+    print("you should save to this file now:", points_file)
+    save_added_points(points_dct, points_file, folder_path)
+    return i, k
+
+#%%
+#out_file = r"C:\Users\ronik\Desktop\Xth_data.txt"
+#folder_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
+#
+#points_file = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\9_croped_track_side_TEST\Rois_side_croped_3_YUV_Tip_3\CSRT.txt"
+#points_dct = load_points_from_tracker_file(points_file)
+#
+#loop_through_imgs(folder_path, points_file, 144)
+
+#%%
+
+
+
+
+
+
