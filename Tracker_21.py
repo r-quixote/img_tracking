@@ -34,7 +34,8 @@ def save_result_rois(output_folder, boxes, bbox_init, tracker_types, init,
                 my_file = open(path_tracker_rois, 'a')
             # write bbox init
             if bbox_init:
-                my_file.writelines(", ".join([str(s) for s in list(bbox_init)]) +", "+ file_name +", "+ pic_time + "\n")
+                my_file.writelines(", ".join([str(s) for s in list(bbox_init)])
+                                    +", "+ file_name +", "+ pic_time + "\n")
 
                 # close file
                 my_file.close()
@@ -211,11 +212,12 @@ def load_image_from_file_or_video(run_images_from_folder, video_files, frame_num
             return ok, []
         ok = True
 
-        # Convert to RGB
-        v, u, y = cv2.split(frame)
-        img_yuv = cv2.merge((y, u, v))
-        frame = cv2.cvtColor(img_yuv, cv2.COLOR_YCrCb2BGR)
-
+# ================color messing can't see why==================================
+#         # Convert to RGB
+#         v, u, y = cv2.split(frame)
+#         img_yuv = cv2.merge((y, u, v))
+#         frame = cv2.cvtColor(img_yuv, cv2.COLOR_YCrCb2BGR)
+# =============================================================================
     else:
         # video.set(cv2.cv2_CAP_PROP_POS_FRAMES, frame_number)
         ok, frame = video.read()
@@ -223,15 +225,18 @@ def load_image_from_file_or_video(run_images_from_folder, video_files, frame_num
             print('Cannot read video file')
             sys.exit()
 
-    # Convert to image format
-    if image_color_format == 'YUV':
-        image_yuv = cv2.cvtColor(frame, cv2.COLOR_BGR2YCrCb)
-        y, u, v = cv2.split(image_yuv)
-        frame = cv2.merge((v, u, y))
-    elif image_color_format == 'GRAY':
-        frame = cv2.cv2tColor(frame, cv2.COLOR_BGR2GRAY)
-        frame = cv2.cv2tColor(frame, cv2.COLOR_GRAY2BGR)
-#    print(filename.split(r"6\DSC_")[-1])
+# ================color messing can't see why==================================
+#     # Convert to image format
+#     if image_color_format == 'YUV':
+#         image_yuv = cv2.cvtColor(frame, cv2.COLOR_BGR2YCrCb)
+#         y, u, v = cv2.split(image_yuv)
+#         frame = cv2.merge((v, u, y))
+#     elif image_color_format == 'GRAY':
+#         frame = cv2.cv2tColor(frame, cv2.COLOR_BGR2GRAY)
+#         frame = cv2.cv2tColor(frame, cv2.COLOR_GRAY2BGR)
+# =============================================================================
+
+
     file_name = filename.split(r"6\DSC_")[-1]
     return ok, frame, file_name
 
@@ -243,8 +248,8 @@ def get_initial_bounding_box(bounding_box_input_type, bbox_input_roi, frame_to_s
         # Define an initial bounding box
         bbox = bbox_input_roi
     elif bounding_box_input_type == 'SELECT_ROI':
-        cv2.namedWindow("img", cv2.WINDOW_NORMAL)
-        bbox = cv2.selectROI("img", frame, True)
+        cv2.namedWindow("SELECT ROI", cv2.WINDOW_NORMAL)
+        bbox = cv2.selectROI("SELECT ROI", frame, True)
     return bbox
 
 def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
@@ -413,7 +418,10 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
         # Manual tracking
         elif k == 112: # p key
             if run_images_from_folder == True:
-                i_frame, manual_k = manual_tracking.loop_through_imgs(video_or_folder_name, path_tracker_rois, i_frame)
+                i_frame, manual_k = manual_tracking.loop_through_imgs(video_or_folder_name,
+                                                                      path_tracker_rois, i_frame,
+                                                                      video_out)
+
             else:
                 print("Nope... can't track manualy with video yet")
                 break
@@ -463,7 +471,7 @@ def main():
 
     # path with videos or files
     video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
-    output_path = r"9_croped_track_side_TEST"
+    output_path = r"9_croped_track_side"
     object_name = 'Tip_3'
 
     #####################################################################################################################
@@ -471,8 +479,8 @@ def main():
     run_tracker_wrapper(tracker_type_list, run_images_from_folder, video_or_folder_name,
                         frame_to_start,
                         bounding_box_input_type, bbox_input_roi, #gt_bbox_list,
-                        image_color_format,
-                        object_name, output_path, first_tiral)
+                        image_color_format, object_name, output_path, first_tiral)
+
 
 #%%
 if __name__ == "__main__":

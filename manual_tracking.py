@@ -58,7 +58,7 @@ def click_event(event, x, y, flags, param ):
         cv2.imshow("Tracking", param[1])
         cv2.waitKey(1)
 
-def clickable_pic_loop(img, curr_pic, i, points_dct, folder_path):
+def clickable_pic_loop(img, curr_pic, i, points_dct, folder_path, video_out):
     original_img = cv2.imread(folder_path + "\\" + curr_pic)
     img = cv2.imread(folder_path + "\\" + curr_pic)
     img = add_previous_points(points_dct, img, curr_pic)
@@ -76,6 +76,10 @@ def clickable_pic_loop(img, curr_pic, i, points_dct, folder_path):
         elif k==13: #Enter key (if used the trackbar)
             break
     i = cv2.getTrackbarPos("trackbar", "Tracking")
+
+    if video_out != None:
+        video_out.write(img)
+
     return k, i
 
 def trackbar_func(val):
@@ -106,7 +110,7 @@ def save_added_points(points_dct, points_file, folder_path):
 
 
 
-def loop_through_imgs(folder_path, points_file, i = 0):
+def loop_through_imgs(folder_path, points_file, i = 0, video_out = None):
     # list of imgs in the folder
     pic_lst = os.listdir(folder_path)
     # try loading exicting points from points_file
@@ -127,7 +131,10 @@ def loop_through_imgs(folder_path, points_file, i = 0):
         cv2.setTrackbarPos("trackbar", "Tracking", i)
 
         # open curr_pic for clicking
-        k,i = clickable_pic_loop(img,curr_pic, i, points_dct, folder_path)
+        k,i = clickable_pic_loop(img,curr_pic, i, points_dct, folder_path, video_out)
+
+        # add to video file
+
 
         # how to continue:
         if k==27:

@@ -91,8 +91,8 @@ def creat_folder(out_path):
         return out_path
 
  #%%
-in_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\9_side"
-out_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
+in_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side"
+out_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_4"
 
 pic_lst  = os.listdir(in_path)
 #pic_lst = pic_lst[:476]   ## for spesific stop...
@@ -127,28 +127,30 @@ else:
 
 
 #%%
-
-
-pic_lst  = os.listdir(r"C:\Users\YasmineMnb\Desktop\Roni_new\PERS\seeds\seed-reco\good")
-q = [int(i.replace(".JPG","")) for i in pic_lst]
-i = max(q)
-while True:
-
-    img = cv2.imread(r"C:\Users\YasmineMnb\Desktop\Roni_new\PERS\seeds\seed-reco\DSC_3162.JPG")
-    ROI = get_ROI(img)
-    if ROI[2:] == (0, 0):
-        print("\n\nstoped")
-        cv2.destroyAllWindows()
-        break
-    croped_im = crop(img, ROI[0], ROI[1], ROI[3], ROI[2], "croped")
-
-    pic_name  = r"C:\Users\YasmineMnb\Desktop\Roni_new\PERS\seeds\seed-reco\good\{}.JPG".format(i)
-
-    cv2.imwrite(pic_name,croped_im)
-    cv2.destroyAllWindows()
-    i +=1
-
-
-
+# =============================================================================
+#
+#
+# pic_lst  = os.listdir(r"C:\Users\YasmineMnb\Desktop\Roni_new\PERS\seeds\seed-reco\good")
+# q = [int(i.replace(".JPG","")) for i in pic_lst]
+# i = max(q)
+# while True:
+#
+#     img = cv2.imread(r"C:\Users\YasmineMnb\Desktop\Roni_new\PERS\seeds\seed-reco\DSC_3162.JPG")
+#     ROI = get_ROI(img)
+#     if ROI[2:] == (0, 0):
+#         print("\n\nstoped")
+#         cv2.destroyAllWindows()
+#         break
+#     croped_im = crop(img, ROI[0], ROI[1], ROI[3], ROI[2], "croped")
+#
+#     pic_name  = r"C:\Users\YasmineMnb\Desktop\Roni_new\PERS\seeds\seed-reco\good\{}.JPG".format(i)
+#
+#     cv2.imwrite(pic_name,croped_im)
+#     cv2.destroyAllWindows()
+#     i +=1
+#
+#
+#
+# =============================================================================
 
 
