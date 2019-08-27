@@ -133,9 +133,6 @@ def loop_through_imgs(folder_path, points_file, i = 0, video_out = None):
         # open curr_pic for clicking
         k,i = clickable_pic_loop(img,curr_pic, i, points_dct, folder_path, video_out)
 
-        # add to video file
-
-
         # how to continue:
         if k==27:
             print("you stoped the manual collection")
@@ -151,15 +148,28 @@ def loop_through_imgs(folder_path, points_file, i = 0, video_out = None):
     save_added_points(points_dct, points_file, folder_path)
     return i, k
 
-#%%
-#out_file = r"C:\Users\ronik\Desktop\Xth_data.txt"
-#folder_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
-#
-#points_file = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\9_croped_track_side_TEST\Rois_side_croped_3_YUV_Tip_3\CSRT.txt"
-#points_dct = load_points_from_tracker_file(points_file)
-#
-#loop_through_imgs(folder_path, points_file, 144)
 
+
+
+#%%  if only manual tracking should be used
+
+def main():
+    folder_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
+    points_file = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\manual_side_Tip_3.txt"
+    i_frame = 0
+
+    # add to video file
+    first_img = cv2.imread(folder_path + "\\" + os.listdir(folder_path)[0])
+    frame_height, frame_width, layers = first_img.shape
+    save_video_name = folder_path + "\\"+ points_file.split("\\")[-1].strip(".txt") + ".avi"
+    fourcc = cv2.VideoWriter_fourcc(*"XVID")
+
+    video_out = cv2.VideoWriter(save_video_name, fourcc, 24.0, (frame_width, frame_height))
+
+    loop_through_imgs(folder_path, points_file, i_frame, video_out)
+
+if __name__ == "__main__":
+    main()
 #%%
 
 
