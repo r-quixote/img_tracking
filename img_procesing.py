@@ -134,5 +134,124 @@ def get_time(file_path):
 #     return merge
 #
 # =============================================================================
+#%%    TRING TO ZOOM....
 
-
+#def zoom_in(img, center_X,center_Y, scale):
+#    height, width, channels = img.shape
+#
+#    radiusX,radiusY= int(scale*height/100),int(scale*width/100)
+#
+#    minX,maxX=centerX-radiusX,centerX+radiusX
+#    minY,maxY=centerY-radiusY,centerY+radiusY
+#
+#    cropped = img[minX:maxX, minY:maxY]
+#    resized_cropped = cv2.resize(cropped, (width, height))
+#
+#    cv2.imshow('my webcam', resized_cropped)
+#
+#
+#
+#
+#def zoom_out(img):
+#    pass
+# =============================================================================
+#
+# def click_event(event, x, y, flags, param ):
+#     # what to do with which mous function -
+#     # param = [curr_pic, img, points, original_img]
+#     curr_pic_name = param[0]
+#     if event == cv2.EVENT_LBUTTONDOWN: ##left click:
+#         print(x,y)
+#         param[2][curr_pic_name] = ((x,y),"Manual")
+#         drawing_copy = param[1].copy()
+#         drawing_copy = cv2.circle(drawing_copy, (x, y), 1, (0, 255, 0), -1)
+#         cv2.imshow("Tracking", drawing_copy)
+#         cv2.waitKey(1)
+#
+#     elif event == cv2.EVENT_RBUTTONDOWN: ## right click:
+#         print("clean")
+#         param[2][curr_pic_name] = (-1,-1)
+#         param[1] = param[3]
+#         cv2.imshow("Tracking", param[1])
+#         cv2.waitKey(1)
+#
+#     elif event == cv2.EVENT_MOUSEWHEEL:
+#         if flags > 0:
+#             print("zoom in")
+#             zoom_in(img, (x,y))
+#         else:
+#             print("zoom out")
+#
+# def clickable_pic_loop(img, curr_pic, i, points_dct, folder_path, video_out):
+#     original_img = cv2.imread(folder_path + "\\" + curr_pic)
+#     img = cv2.imread(folder_path + "\\" + curr_pic)
+# #    img = add_previous_points(points_dct, img, curr_pic)
+#     cv2.imshow("Tracking", img)
+#     while True:
+#         cv2.setMouseCallback("Tracking", click_event, param = [curr_pic, img, points_dct, original_img])
+#
+#         k=cv2.waitKey(1) & 0xFF
+#         if k==52: #4 key(numpad left)
+#             break
+#         elif k==54: #6 key(numpad right)
+#             break
+#         elif k==27: #Esc key(numpad right)
+#             break
+#         elif k==13: #Enter key (if used the trackbar)
+#             break
+#     i = cv2.getTrackbarPos("trackbar", "Tracking")
+#
+#     if video_out != None:
+#         video_out.write(img)
+#
+#     return k, i
+#
+#
+# folder_path =  r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
+# curr_pic = os.listdir(folder_path)[0]
+# video_out = None
+# img = None
+# i = 0
+# points_dct= {}
+# clickable_pic_loop(img, curr_pic, i, points_dct, folder_path, video_out)
+#
+# #%%
+#
+# import cv2
+#
+# def show_webcam(mirror=False):
+#     scale=10
+#
+#
+#     while True:
+#
+#
+#         #get the webcam size
+#         height, width, channels = img.shape
+#
+#         #prepare the crop
+#         centerX,centerY=int(height/3),int(width/3)
+#         radiusX,radiusY= int(scale*height/100),int(scale*width/100)
+#
+#         minX,maxX=centerX-radiusX,centerX+radiusX
+#         minY,maxY=centerY-radiusY,centerY+radiusY
+#
+#         cropped = img[minX:maxX, minY:maxY]
+#         resized_cropped = cv2.resize(cropped, (width, height))
+#
+#         cv2.imshow('my webcam', resized_cropped)
+#         if cv2.waitKey(1) == 27:
+#             break  # esc to quit
+#
+#         #add + or - 5 % to zoom
+#         elif cv2.waitKey(1) == 52:
+#             scale += 5  # +5
+#             print("52")
+#             print(scale)
+#         elif cv2.waitKey(1) == 54:
+#             scale -= 5  # +5
+#             print("54")
+#             print(scale)
+#
+# show_webcam(mirror=False)
+# =============================================================================

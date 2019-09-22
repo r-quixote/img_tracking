@@ -30,11 +30,9 @@ def load_points_from_tracker_file(points_file):
     return points_dct
 
 def add_previous_points(points_dct, img,curr_pic_name):
-    points_lst = []
     for i in sorted(points_dct):
-        points_lst.append(points_dct[i][0])
-    pts = np.array(points_lst, np.int32)
-    cv2.polylines(img,[pts],False,(0,55,255), 2)
+        (x,y) = points_dct[i][0]
+        cv2.circle(img, (x, y), 1, (0,150,255), -1)
     cv2.namedWindow("Tracking", cv2.WINDOW_NORMAL)
     cv2.imshow("Tracking", img)
     return img
@@ -102,7 +100,7 @@ def save_added_points(points_dct, points_file, folder_path):
             box_x = point[0]-box_size/2
             box_y = point[1]-box_size/2
             img_time = img_procesing.get_time(full_img_path)
-            line = ', '.join(map(str, [box_x, box_y, box_size, box_size, full_img_path, img_time, "manual"]))
+            line = ', '.join(map(str, [box_x, box_y, box_size, box_size, full_img_path, img_time, "Manual"]))
         #    line += "\n"
             with open(points_file, "a") as out_file:
                 out_file.write(line)
@@ -131,7 +129,7 @@ def loop_through_imgs(folder_path, points_file, i = 0, video_out = None):
         cv2.setTrackbarPos("trackbar", "Tracking", i)
 
         # open curr_pic for clicking
-        k,i = clickable_pic_loop(img,curr_pic, i, points_dct, folder_path, video_out)
+        k,i = clickable_pic_loop(img, curr_pic, i, points_dct, folder_path, video_out)
 
         # how to continue:
         if k==27:

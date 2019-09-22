@@ -34,8 +34,8 @@ def save_result_rois(output_folder, boxes, bbox_init, tracker_types, init,
                 my_file = open(path_tracker_rois, 'a')
             # write bbox init
             if bbox_init:
-                my_file.writelines(", ".join([str(s) for s in list(bbox_init)])
-                                    +", "+ file_name +", "+ pic_time + "\n")
+                my_file.writelines(", ".join([str(s) for s in list(bbox_init)])+
+                                   ", "+ file_name +", "+ pic_time + ", Start \n")
 
                 # close file
                 my_file.close()
@@ -56,7 +56,8 @@ def save_result_rois(output_folder, boxes, bbox_init, tracker_types, init,
         # roi file path
         path_tracker_rois = dirName + "\\" + tracker_types[i] + '.txt'
         with open(path_tracker_rois, "a") as my_file:
-            my_file.writelines(", ".join([str(s) for s in list(new_box)]) +", "+ file_name +", "+ pic_time + "\n")
+            my_file.writelines(", ".join([str(s) for s in list(new_box)]) + ", " +
+                               file_name +", "+ pic_time + ", Auto\n")
 
     return path_tracker_rois
 
@@ -158,7 +159,12 @@ def draw_bounding_box(frame, boxes, tracker_ok, timer, #ground_truth_bbox,
             dots = list(map(float, dots))
             x = (int(dots[0] + dots[2]/2))
             y = (int(dots[1] + dots[3]/2))
-            cv2.circle(frame, (x, y), 1, (0,0,255), -1)
+            #manual in Orange
+            if line.split(", ")[-1].strip() == "Auto":
+                cv2.circle(frame, (x, y), 1, (0,0,255), -1)
+            #manual in Orange
+            elif line.split(", ")[-1].strip() == "Manual":
+                cv2.circle(frame, (x, y), 1, (0,150,255), -1)
 
     if not tracker_ok:
         # Tracking failure
@@ -260,6 +266,7 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
         # loop through frames
     i_frame = frame_to_start
     print(i_frame)
+    k = 0
     while True:
         try:
             ok, frame, f_name = load_image_from_file_or_video(run_images_from_folder, video_files, i_frame, video,
@@ -273,8 +280,9 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
             # if lost tracking break
             if not ok:
                 print("\nLost it at -", i_frame)
-                break
-                pass
+                return i_frame, 112
+#                break
+
 
             # save current rois from all trackers to txt files
             path_tracker_rois = save_result_rois(video_or_folder_name, boxes, [],
@@ -470,9 +478,9 @@ def main():
     bbox_input_roi = []
 
     # path with videos or files
-    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
-    output_path = r"9_croped_track_side"
-    object_name = 'Tip_3'
+    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_2"
+    output_path = r"9_croped_track_side_FIN"
+    object_name = 'Tip_2'
 
     #####################################################################################################################
     print("\nstart tracking: ")
