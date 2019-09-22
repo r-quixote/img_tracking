@@ -6,6 +6,9 @@ import progress_bar
 import img_procesing
 import manual_tracking
 
+##this is a testing note
+
+
 # Save tracked objects rois
 def save_result_rois(output_folder, boxes, bbox_init, tracker_types, init,
                      image_color_format, object_name, file_name,
