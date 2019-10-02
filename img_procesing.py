@@ -106,6 +106,24 @@ def get_time(file_path):
             return("path time not found")
     STAT = os.stat(file_path)
     return time.strftime('%d-%m %H:%M', time.localtime(STAT[ST_MTIME]))
+#%%
+def rotate_img(img):
+    import imutils
+    rotated = imutils.rotate(img, 180)
+#    cv2.imshow("Rotated", rotated)
+#    cv2.waitKey(0)
+    return rotated
+#%%
+# =============================================================================
+#
+#     in_path = r"C:\Users\YasmineMnb\Desktop\New folder (2)"
+#     im = os.listdir(in_path)[0]
+#     img = in_path + "\\" + im
+#     img = cv2.imread(img)
+#     rotate_img(img)
+# =============================================================================
+
+
 
 # =============================================================================
 # def thresh_per_chanel(img, chan, MIN=0 ,MAX=255, win_name = "chanel"):

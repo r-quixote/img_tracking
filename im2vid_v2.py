@@ -87,9 +87,9 @@ def create_video(input_folder_path, outvid_path, fps):
 
     #set params for the vid_output
     is_color = True
-#    fourcc = cv2.VideoWriter_fourcc(*"XVID") ## .avi
+    fourcc = cv2.VideoWriter_fourcc(*"XVID") ## .avi
 
-    fourcc = cv2.VideoWriter_fourcc(*'MP4V')  ## .mp4
+#    fourcc = cv2.VideoWriter_fourcc(*'MP4V')  ## .mp4
     vid = cv2.VideoWriter(outvid_path, fourcc, fps, size, is_color)
 
     t = time.perf_counter()
@@ -163,17 +163,16 @@ def create_gif(input_folder_path, output_path):
     for i in range(0, int(len(imgs_lst))):
         image_file = input_folder_path +"\\"+ imgs_lst[i]
         pil_im = Image.open(image_file)
-
         frames.append(pil_im)
 
+        perc = i/len(imgs_lst)
+        progress_bar.update_progress_bar(perc, "time")
+
     frames[0].save(output_path, format='GIF',
-                      append_images=frames[1:], save_all=True, duration=10, loop=0)
+                      append_images=frames[:500], save_all=True, duration=10, loop=0)
 
-input_folder_path = r"C:\Users\YasmineMnb\Desktop\cam_clibration\how_do_drones_work\opencv\results"
+input_folder_path = r"C:\Users\YasmineMnb\Desktop\New_folder_2"
 #outvid_path = r"C:\Users\YasmineMnb\Desktop\cam_clibration\how_do_drones_work\opencv\results.avi"
-
-#outvid_path = r"C:\Users\YasmineMnb\Desktop\cam_clibration\how_do_drones_work\opencv\results.mp4"
-
 #create_video(input_folder_path, outvid_path, 12.0)
 
 
@@ -181,8 +180,6 @@ input_folder_path = r"C:\Users\YasmineMnb\Desktop\cam_clibration\how_do_drones_w
 ## gif...
 
 out_gif = r'C:\Users\YasmineMnb\Desktop\2_test.gif'
-
-
 create_gif(input_folder_path, out_gif)
 #%%
 # ======== Vid2Im =============================================================

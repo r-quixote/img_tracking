@@ -2,6 +2,7 @@ import time
 import cv2
 import os
 import progress_bar
+import img_procesing
 
 def crop(img, x, y, h, w, name):
     """
@@ -55,12 +56,15 @@ def crop_all(x,y,h,w, in_path, out_path, pic_lst):
         cv2.setTrackbarPos("track_bar", "croping", i)
 
         croped = crop(frame, x,y,h,w, "croping")
-        cv2.imshow("croping", croped)
+
+        rotated = img_procesing.rotate_img(croped)
+
+        cv2.imshow("croping", rotated)
         cv2.waitKey(1)
 
 
 
-        cv2.imwrite(pic_name,croped)
+        cv2.imwrite(pic_name,rotated)
     perc = (i/len(pic_lst))*100
     progress_bar.update_progress_bar(perc/100, " time left: "+str(estimate))
     print("\nin {} seconds".format(time.perf_counter() - t))
@@ -91,8 +95,8 @@ def creat_folder(out_path):
         return out_path
 
  #%%
-in_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side"
-out_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_4"
+in_path = r"C:\Users\YasmineMnb\Desktop\New_folder_3"
+out_path = r"C:\Users\YasmineMnb\Desktop\New_folder_4"
 
 pic_lst  = os.listdir(in_path)
 #pic_lst = pic_lst[:476]   ## for spesific stop...
