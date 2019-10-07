@@ -481,9 +481,9 @@ def main():
     bbox_input_roi = []
 
     # path with videos or files
-    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_2"
-    output_path = r"9_croped_track_side_FIN"
-    object_name = 'Tip_2'
+    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
+    output_path = r"9_croped_track_side_FIN_2"
+    object_name = 'Tip_1_3'
 
     #####################################################################################################################
     print("\nstart tracking: ")

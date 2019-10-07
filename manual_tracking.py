@@ -153,7 +153,6 @@ def loop_through_imgs(folder_path, points_file, i = 0, video_out = None):
 
 def main():
     folder_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
-    points_file = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\manual_side_Tip_3.txt"
     i_frame = 0
 
     # add to video file

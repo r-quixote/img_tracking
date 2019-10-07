@@ -6,11 +6,13 @@ Created on Thu Nov 15 13:26:09 2018
 """
 import cv2
 import os
-import progress_bar
 import time
 import numpy as np
 from stat import ST_MTIME
 import traceback
+
+import img_procesing
+import progress_bar
 #from PIL import Image ## for gif
 
 def get_orig_path(file_path):
@@ -44,14 +46,7 @@ def get_time(file_path):
     STAT = os.stat(file_path)
     return time.strftime('%d-%m %H:%M', time.localtime(STAT[ST_MTIME]))
 
-def draw_on_img(img, text):
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    font_size = img.shape[0]/400
-    if img.shape[1]*1.5 < img.shape[0]:
-        font_size = img.shape[1]/300
-    if font_size>6: font_size = 6
-    img_with_text = cv2.putText(img, text, (10,int(img.shape[0]/6)), font, font_size,(255,255,255),2,cv2.LINE_AA)
-    return img_with_text
+
 
 def remove_blue(img):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -104,7 +99,7 @@ def create_video(input_folder_path, outvid_path, fps):
 
 
     # ========== if anything should be done with img enter code here ==========
-
+            img = img_procesing.rotate_img(img)
 
 #            dots_img = remove_blue(img)
 #            img = np.concatenate((img, dots_img), axis=1) ## add next to each other
@@ -115,7 +110,7 @@ def create_video(input_folder_path, outvid_path, fps):
 #            break
 #            img = cv2.resize(img, size)
 
-#            draw_on_img(img, get_time(image_file)) ## add time stamp
+            img_procesing.draw_on_img(img, img_procesing.get_time(image_file)) ## add time stamp
 
 #            #save as gif
 #            if i%4 ==0:
@@ -171,16 +166,16 @@ def create_gif(input_folder_path, output_path):
     frames[0].save(output_path, format='GIF',
                       append_images=frames[:500], save_all=True, duration=10, loop=0)
 
-input_folder_path = r"C:\Users\YasmineMnb\Desktop\New_folder_2"
-#outvid_path = r"C:\Users\YasmineMnb\Desktop\cam_clibration\how_do_drones_work\opencv\results.avi"
-#create_video(input_folder_path, outvid_path, 12.0)
+input_folder_path = r"C:\Users\YasmineMnb\Desktop\New folder (2)"
+outvid_path = r"C:\Users\YasmineMnb\Desktop\camjun_results1111111.avi"
+create_video(input_folder_path, outvid_path, 12.0)
 
 
 
 ## gif...
 
-out_gif = r'C:\Users\YasmineMnb\Desktop\2_test.gif'
-create_gif(input_folder_path, out_gif)
+#out_gif = r'C:\Users\YasmineMnb\Desktop\2_test.gif'
+#create_gif(input_folder_path, out_gif)
 #%%
 # ======== Vid2Im =============================================================
 #
@@ -204,18 +199,31 @@ create_gif(input_folder_path, out_gif)
 #     cv2.imwrite(r"C:\Users\YasmineMnb\Desktop\test2\frame%s.jpg" % name, image)     # save frame as JPEG file
 #
 # =============================================================================
-#%%
-
-from PIL import Image, ImageDraw
-
-images = []
-
-
-
-im = Image.open("bride.jpg")
-
-
-im.save('out.gif', save_all=True, append_images=[im1, im2, ...])
-
-images[0].save(r"C:\Users\YasmineMnb\Desktop\cam_clibration\how_do_drones_work\opencv\pillow_imagedraw.gif",
-               save_all=True, append_images=images[1:], optimize=False, duration=40, loop=0)
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+# =============================================================================
+#
+# from PIL import Image, ImageDraw
+#
+# images = []
+#
+#
+#
+# im = Image.open("bride.jpg")
+#
+#
+# im.save('out.gif', save_all=True, append_images=[im1, im2, ...])
+#
+# images[0].save(r"C:\Users\YasmineMnb\Desktop\cam_clibration\how_do_drones_work\opencv\pillow_imagedraw.gif",
+#                save_all=True, append_images=images[1:], optimize=False, duration=40, loop=0)
+#
+# =============================================================================

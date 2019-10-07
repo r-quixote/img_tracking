@@ -56,7 +56,7 @@ def color_filter(img):
 	ment for finding the red
 	using the R channel only (from BGR)
 	"""
-    p.imshow(croped_img[:,:,2], vmin = 0, vmax = 255) ##use this to find the color range!
+    p.imshow(img[:,:,2], vmin = 0, vmax = 255) ##use this to find the color range!
 
     lower_red = np.array([0,0,105])
     upper_red = np.array([255,255,255])
@@ -106,7 +106,16 @@ def get_time(file_path):
             return("path time not found")
     STAT = os.stat(file_path)
     return time.strftime('%d-%m %H:%M', time.localtime(STAT[ST_MTIME]))
-#%%
+
+def draw_on_img(img, text):
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_size = img.shape[0]/400
+    if img.shape[1]*1.5 < img.shape[0]:
+        font_size = img.shape[1]/300
+    if font_size>6: font_size = 6
+    img_with_text = cv2.putText(img, text, (10,int(img.shape[0]/6)), font, font_size,(255,255,255),2,cv2.LINE_AA)
+    return img_with_text
+
 def rotate_img(img):
     import imutils
     rotated = imutils.rotate(img, 180)
