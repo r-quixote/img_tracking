@@ -99,7 +99,7 @@ def create_video(input_folder_path, outvid_path, fps):
 
 
     # ========== if anything should be done with img enter code here ==========
-            img = img_procesing.rotate_img(img)
+            img = img_procesing.rotate_img(img,270)
 
 #            dots_img = remove_blue(img)
 #            img = np.concatenate((img, dots_img), axis=1) ## add next to each other
@@ -166,8 +166,8 @@ def create_gif(input_folder_path, output_path):
     frames[0].save(output_path, format='GIF',
                       append_images=frames[:500], save_all=True, duration=10, loop=0)
 
-input_folder_path = r"C:\Users\YasmineMnb\Desktop\New folder (2)"
-outvid_path = r"C:\Users\YasmineMnb\Desktop\camjun_results1111111.avi"
+input_folder_path = r"C:\Users\YasmineMnb\Downloads\cam_20191016_091846\var\www\html\media"
+outvid_path = r"C:\Users\YasmineMnb\Downloads\cam_20191016_091846\var\www\html\media.avi"
 create_video(input_folder_path, outvid_path, 12.0)
 
 

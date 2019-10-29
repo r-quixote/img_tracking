@@ -120,7 +120,7 @@ def get_box_colors():
 
 # Return a list of all file names in path which are images
 def list_images_in_path(directory):
-    included_extensions = ['jpg', 'bmp', 'png', 'gif', 'jpeg']
+    included_extensions = ['jpg', 'bmp', 'png', 'gif', 'jpeg', 'JPG', 'JPEG']
     onlyfiles = [f for f in os.listdir(directory)
                  if any(f.endswith(ext) for ext in included_extensions)]
 
@@ -328,8 +328,7 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
 
 # Run tracker according to tracking params. Display result on images
 def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_name, frame_to_start,
-                        bounding_box_input_type, bbox_input_roi, #gt_bbox_list,
-                        image_color_format,
+                        bounding_box_input_type, bbox_input_roi, image_color_format,
                         object_name, output_path, first_tiral):
     """ The function runs a few opencv2 trackers on a video (which has previously been split into frames)
         then it saves a video of the results
@@ -371,6 +370,10 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
     if run_images_from_folder:
         video = []
         video_files = list_images_in_path(video_or_folder_name)
+        if video_files == []:
+            print("bad file format for imgs in path!, no files found")
+            sys.exit()
+
     else:
         video = cv2.VideoCapture(video_or_folder_name)
         # Exit if video not opened.
@@ -421,7 +424,6 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
         i_frame, k  = tracker_loop(i_frame, run_images_from_folder, video_files, video,
                      image_color_format, multi_tracker,video_or_folder_name,
                      tracker_types, object_name, output_path, first_tiral,
-                     # first_tiral is mine and for difrence between "a" and "w" writing!
                      video_out, colors = get_box_colors())
         # Esc
         if k == 27:
@@ -482,8 +484,17 @@ def main():
 
     # path with videos or files
     video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
-    output_path = r"9_croped_track_side_FIN_2"
-    object_name = 'Tip_1_3'
+    output_path = r"9_croped_track_side_FIN_3" # only LOCAL file name! not full path
+    object_name = 'Tip_3_2'
+
+
+    outfolder = os.path.dirname(video_or_folder_name) + "\\" + output_path
+
+    if os.path.isdir(outfolder):
+        print("that folder already exists! are you sure you want to continue?")
+        ans = input("y/n? ")
+        if ans=="n":
+            sys.exit()
 
     #####################################################################################################################
     print("\nstart tracking: ")

@@ -116,23 +116,37 @@ def draw_on_img(img, text):
     img_with_text = cv2.putText(img, text, (10,int(img.shape[0]/6)), font, font_size,(255,255,255),2,cv2.LINE_AA)
     return img_with_text
 
-def rotate_img(img):
+def rotate_img(img, angle):
     import imutils
-    rotated = imutils.rotate(img, 180)
+    rotated = imutils.rotate(img, angle)
 #    cv2.imshow("Rotated", rotated)
 #    cv2.waitKey(0)
     return rotated
+
 #%%
-# =============================================================================
-#
-#     in_path = r"C:\Users\YasmineMnb\Desktop\New folder (2)"
-#     im = os.listdir(in_path)[0]
-#     img = in_path + "\\" + im
-#     img = cv2.imread(img)
-#     rotate_img(img)
-# =============================================================================
 
+    in_path = r"C:\Users\YasmineMnb\Downloads\cam_20191016_091846\var\www\html\media"
 
+    img_1 = r"C:\Users\YasmineMnb\Desktop\camjunk\1.JPG"
+    img_2 = r"C:\Users\YasmineMnb\Desktop\camjunk\2.JPG"
+
+    im = os.listdir(in_path)[0]
+    img = in_path + "\\" + im
+    img_1 = cv2.imread(img_1)
+    img_2 = cv2.imread(img_2)
+    #%%
+    img = rotate_img(img, 270)
+    cv2.namedWindow("img", cv2.WINDOW_NORMAL)
+    cv2.imshow("img", img)
+#%%
+    cv2.namedWindow("img1", cv2.WINDOW_NORMAL)
+    cv2.imshow("img1", img_1)
+    cv2.namedWindow("img2", cv2.WINDOW_NORMAL)
+    cv2.imshow("img2", img_2)
+
+    both = cv2.add(img_1,img_2)
+    cv2.namedWindow("both", cv2.WINDOW_NORMAL)
+    cv2.imshow("both", both)
 
 # =============================================================================
 # def thresh_per_chanel(img, chan, MIN=0 ,MAX=255, win_name = "chanel"):
