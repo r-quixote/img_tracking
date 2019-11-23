@@ -57,14 +57,17 @@ def crop_all(x,y,h,w, in_path, out_path, pic_lst):
 
         croped = crop(frame, x,y,h,w, "croping")
 
-        rotated = img_procesing.rotate_img(croped)
-
-        cv2.imshow("croping", rotated)
+# ========= if anything should be done with img enter code here ===============
+#
+#         rotated = img_procesing.rotate_img(croped,180)
+#
+# =============================================================================
+        cv2.imshow("croping", croped)
         cv2.waitKey(1)
 
 
 
-        cv2.imwrite(pic_name,rotated)
+        cv2.imwrite(pic_name,croped)
     perc = (i/len(pic_lst))*100
     progress_bar.update_progress_bar(perc/100, " time left: "+str(estimate))
     print("\nin {} seconds".format(time.perf_counter() - t))
@@ -95,8 +98,8 @@ def creat_folder(out_path):
         return out_path
 
  #%%
-in_path = r"C:\Users\YasmineMnb\Desktop\New_folder_3"
-out_path = r"C:\Users\YasmineMnb\Desktop\New_folder_4"
+in_path = r"C:\Users\YasmineMnb\Desktop\setup 1.5\3\side"
+out_path = r"C:\Users\YasmineMnb\Desktop\setup 1.5\3\side_croped"
 
 pic_lst  = os.listdir(in_path)
 #pic_lst = pic_lst[:476]   ## for spesific stop...
@@ -111,8 +114,6 @@ last_img = cv2.imread(last_pic_name_path)
 
 ROI = get_ROI(last_img)
 
-#ROI = (683, 579, 3166, 2045)
-
 cv2.destroyAllWindows()
 #x = ROI[0]
 #y = ROI[1]
@@ -123,7 +124,6 @@ if (ROI[2] or ROI[3]) == 0: ## if selection was canceled ROI has dimension of 0
     print("\n###############\
           you canceled...\
           ###############")
-
 else:
     print("\nnow croping :)")
     crop_all(ROI[0], ROI[1], ROI[3], ROI[2], in_path, out_path, pic_lst)

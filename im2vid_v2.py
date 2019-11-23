@@ -99,18 +99,18 @@ def create_video(input_folder_path, outvid_path, fps):
 
 
     # ========== if anything should be done with img enter code here ==========
-            img = img_procesing.rotate_img(img,270)
+#            img = img_procesing.rotate_img(img,180)
 
 #            dots_img = remove_blue(img)
 #            img = np.concatenate((img, dots_img), axis=1) ## add next to each other
-#            size = (int(img.shape[1]/2), int(img.shape[0]/1))
-#            size = (1920,1080)      ##(3145, 1016)
-
+#            size = (int(img.shape[1]/4), int(img.shape[0]/4))
+#            size = (1500,1080)      ##(3145, 1016)
+#            print(size[0], size[1])
 #            print(size[0]/size[1])
 #            break
 #            img = cv2.resize(img, size)
 
-            img_procesing.draw_on_img(img, img_procesing.get_time(image_file)) ## add time stamp
+#            img_procesing.draw_on_img(img, img_procesing.get_time(image_file)) ## add time stamp
 
 #            #save as gif
 #            if i%4 ==0:
@@ -166,10 +166,9 @@ def create_gif(input_folder_path, output_path):
     frames[0].save(output_path, format='GIF',
                       append_images=frames[:500], save_all=True, duration=10, loop=0)
 
-input_folder_path = r"C:\Users\YasmineMnb\Downloads\cam_20191016_091846\var\www\html\media"
-outvid_path = r"C:\Users\YasmineMnb\Downloads\cam_20191016_091846\var\www\html\media.avi"
+input_folder_path = r"C:\Users\YasmineMnb\Desktop\agueda and cini\100D7500_croped_4"
+outvid_path = r"C:\Users\YasmineMnb\Desktop\agueda and cini\100D7500_croped_4.avi"
 create_video(input_folder_path, outvid_path, 12.0)
-
 
 
 ## gif...

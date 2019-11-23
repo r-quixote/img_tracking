@@ -6,8 +6,6 @@ import progress_bar
 import img_procesing
 import manual_tracking
 
-##this is a testing note
-
 
 # Save tracked objects rois
 def save_result_rois(output_folder, boxes, bbox_init, tracker_types, init,
@@ -39,19 +37,8 @@ def save_result_rois(output_folder, boxes, bbox_init, tracker_types, init,
             if bbox_init:
                 my_file.writelines(", ".join([str(s) for s in list(bbox_init)])+
                                    ", "+ file_name +", "+ pic_time + ", Start \n")
-
                 # close file
                 my_file.close()
-
-#        # Save ground truth init roi
-#        path_gt_rois = dirName + "\\GT.txt"
-#
-#        # create tracker file
-#        my_file = open(path_gt_rois, 'w+')
-#        print("rois will be saved to: " + my_file.name +"\n"+ ("\n" + 50*"##")*2 + "\n")
-#
-#        # close file
-#        my_file.close()
         return path_tracker_rois
 
     # Append files and save current box
@@ -67,10 +54,9 @@ def save_result_rois(output_folder, boxes, bbox_init, tracker_types, init,
 
 # set video output for saving
 def create_video_results(video_or_folder_name, frame, image_color_format, object_name, output_path):
-    # dirName = video_or_folder_name + "\\1ResultsPython"
     dirName = os.path.dirname(video_or_folder_name)
     videoName = os.path.splitext(os.path.basename(video_or_folder_name))
-    dirName = dirName + "\\" + output_path#"9_small_Results_tip1"
+    dirName = dirName + "\\" + output_path
     if not os.path.isdir(dirName):
         os.mkdir(dirName)
     save_video_name = dirName + "\\" + videoName[0] + \
@@ -79,13 +65,11 @@ def create_video_results(video_or_folder_name, frame, image_color_format, object
     frame_height, frame_width, layers = frame.shape
     video_out = cv2.VideoWriter(save_video_name, fourcc, 24.0, (frame_width, frame_height))
     print("video will be saved to: " + save_video_name)
-    # out = cv2.VideoWriter(save_video_name, fourcc, 20.0, (640, 480))
     return video_out
 
 # create list of colors to use to show trackers
 def get_box_colors():
     colors = []
-    # colors.append((200, 200, 200))  # ground truth
     colors.append((0, 0, 0))  # Black
     colors.append((255, 0, 0))  # Red
     colors.append((0, 255, 0))  # Lime
@@ -144,7 +128,7 @@ def draw_bounding_box(frame, boxes, tracker_ok, timer, #ground_truth_bbox,
 
         p1 = (int(new_box[0]), int(new_box[1]))
         p2 = (int(new_box[0] + new_box[2]), int(new_box[1] + new_box[3]))
-        tracker_type = tracker_types[i]
+#        tracker_type = tracker_types[i]
 
         cv2.rectangle(frame, p1, p2, colors[i + 1], 2, 4)
 # =============================================================================
@@ -162,18 +146,16 @@ def draw_bounding_box(frame, boxes, tracker_ok, timer, #ground_truth_bbox,
             dots = list(map(float, dots))
             x = (int(dots[0] + dots[2]/2))
             y = (int(dots[1] + dots[3]/2))
-            #manual in Orange
+            # auto in red
             if line.split(", ")[-1].strip() == "Auto":
                 cv2.circle(frame, (x, y), 1, (0,0,255), -1)
-            #manual in Orange
+            # manual in Orange
             elif line.split(", ")[-1].strip() == "Manual":
                 cv2.circle(frame, (x, y), 1, (0,150,255), -1)
 
     if not tracker_ok:
         # Tracking failure
         cv2.putText(frame, "Tracking failure detected", (100, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
-#        print("Tracking failure detected")
-
     # Display FPS on frame
     if len(boxes) == 1:
         cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
@@ -221,7 +203,7 @@ def load_image_from_file_or_video(run_images_from_folder, video_files, frame_num
             return ok, []
         ok = True
 
-# ================color messing can't see why==================================
+# ================ color messing can't see why ================================
 #         # Convert to RGB
 #         v, u, y = cv2.split(frame)
 #         img_yuv = cv2.merge((y, u, v))
@@ -234,7 +216,7 @@ def load_image_from_file_or_video(run_images_from_folder, video_files, frame_num
             print('Cannot read video file')
             sys.exit()
 
-# ================color messing can't see why==================================
+# ================ color messing can't see why ================================
 #     # Convert to image format
 #     if image_color_format == 'YUV':
 #         image_yuv = cv2.cvtColor(frame, cv2.COLOR_BGR2YCrCb)
@@ -244,8 +226,6 @@ def load_image_from_file_or_video(run_images_from_folder, video_files, frame_num
 #         frame = cv2.cv2tColor(frame, cv2.COLOR_BGR2GRAY)
 #         frame = cv2.cv2tColor(frame, cv2.COLOR_GRAY2BGR)
 # =============================================================================
-
-
     file_name = filename.split(r"6\DSC_")[-1]
     return ok, frame, file_name
 
@@ -284,8 +264,6 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
             if not ok:
                 print("\nLost it at -", i_frame)
                 return i_frame, 112
-#                break
-
 
             # save current rois from all trackers to txt files
             path_tracker_rois = save_result_rois(video_or_folder_name, boxes, [],
@@ -474,7 +452,7 @@ def main():
     first_tiral = True # in order to continue from last point
 
     # Set up which trackers to run # 'BOOSTING', doesn't work for some reason
-    tracker_type_list = ['CSRT']#, 'KCF']# 'TLD', 'MEDIANFLOW','MIL', 'MOSSE'] # 'GOTURN'
+    tracker_type_list = ['CSRT']#, 'KCF', 'TLD', 'MEDIANFLOW','MIL', 'MOSSE'] # 'GOTURN'
 
     image_color_format = 'YUV' #'GRAY'  # YUV = don't change input format
 
@@ -483,9 +461,9 @@ def main():
     bbox_input_roi = []
 
     # path with videos or files
-    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
-    output_path = r"9_croped_track_side_FIN_3" # only LOCAL file name! not full path
-    object_name = 'Tip_3_2'
+    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\camjunk\math\pictures_tracking"
+    output_path = r"Tracked2" # only LOCAL file name! not full path
+    object_name = '1'
 
 
     outfolder = os.path.dirname(video_or_folder_name) + "\\" + output_path
@@ -493,10 +471,10 @@ def main():
     if os.path.isdir(outfolder):
         print("that folder already exists! are you sure you want to continue?")
         ans = input("y/n? ")
-        if ans=="n":
+        if ans == "n":
             sys.exit()
 
-    #####################################################################################################################
+    ###########################################################################
     print("\nstart tracking: ")
     run_tracker_wrapper(tracker_type_list, run_images_from_folder, video_or_folder_name,
                         frame_to_start,

@@ -104,6 +104,9 @@ def get_time(file_path):
         file_path = get_orig_path(file_path)
         if file_path == "EEROR":
             return("path time not found")
+
+    if not os.path.isfile(file_path):
+        return("path time not found")
     STAT = os.stat(file_path)
     return time.strftime('%d-%m %H:%M', time.localtime(STAT[ST_MTIME]))
 
@@ -122,6 +125,14 @@ def rotate_img(img, angle):
 #    cv2.imshow("Rotated", rotated)
 #    cv2.waitKey(0)
     return rotated
+
+def resize_img(img, angle):
+    resized = []
+#    cv2.imshow("Resized", resized)
+#    cv2.waitKey(0)
+    return resized
+
+
 
 #%%
 
@@ -296,3 +307,32 @@ def rotate_img(img, angle):
 #
 # show_webcam(mirror=False)
 # =============================================================================
+#%%
+
+    ## renameing files in folder
+
+def rename_folder(folder_path, output_path):
+    #%%
+    pic_lst  = os.listdir(folder_path)
+    for i in range(len(pic_lst)):
+        if len(pic_lst[i])>8:
+            new_name = pic_lst[i].replace("0","",1)
+        else:
+            new_name = pic_lst[i]
+        src = folder_path + "\\" +  pic_lst[i]
+        dst = output_path + "\\" +  new_name
+
+#        print(src,"\n", dst)
+        shutil.copy(src,dst)
+
+    #%%
+    folder_path = r"C:\Users\YasmineMnb\Desktop\camjunk\webcam"
+    output_path = r"C:\Users\YasmineMnb\Desktop\camjunk\webcam_new"
+    rename_folder(folder_path)
+
+
+
+
+
+
+
