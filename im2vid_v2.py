@@ -157,6 +157,11 @@ def create_gif(input_folder_path, output_path):
     frames[0].save(output_path, format='GIF',
                       append_images=frames[:500], save_all=True, duration=10, loop=0)
 
-input_folder_path = r"C:\Users\YasmineMnb\Desktop\agueda and cini\100D7500_croped_4"
-outvid_path = r"C:\Users\YasmineMnb\Desktop\agueda and cini\100D7500_croped_4.avi"
-create_video(input_folder_path, outvid_path, 12.0)
+def main():
+    input_folder_path = r"C:\Users\YasmineMnb\Desktop\agueda and cini\100D7500_croped_4"
+    outvid_path = r"C:\Users\YasmineMnb\Desktop\agueda and cini\100D7500_croped_4.avi"
+    create_video(input_folder_path, outvid_path, 12.0)
+
+
+if __name__ == '__main__':
+    main()
