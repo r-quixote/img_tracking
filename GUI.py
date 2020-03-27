@@ -2,11 +2,9 @@
 """
 Created on Tue Aug 27 15:49:29 2019
 
-@author: YasmineMnb
+@author: Roni
 """
 
-
-# import the necessary packages
 from tkinter import *
 
 from PIL import Image

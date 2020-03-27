@@ -23,7 +23,7 @@ def crop_all(x,y,h,w, in_path, out_path, pic_lst):
     """
     #%
     t = time.perf_counter() ## need this for the progress bar
-    cv2.namedWindow("croping", cv2.WINDOW_NORMAL)
+    cv2.namedWindow("croping")#, cv2.WINDOW_NORMAL)
 
     for i in range(len(pic_lst)):
         pic_name = pic_lst[i]
@@ -96,8 +96,8 @@ def creat_folder(out_path):
         return out_path
 
 def main():
-    in_path = r"C:\Users\YasmineMnb\Desktop\setup 1.5\3\side"
-    out_path = r"C:\Users\YasmineMnb\Desktop\test"
+    in_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side"
+    out_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_3"
 
     pic_lst  = os.listdir(in_path)
     #pic_lst = pic_lst[:476]   ## for spesific stop...
@@ -122,3 +122,5 @@ def main():
         print("\nnow croping :)")
         crop_all(ROI[0], ROI[1], ROI[3], ROI[2], in_path, out_path, pic_lst)
 
+if __name__ == "__main__":
+    main()

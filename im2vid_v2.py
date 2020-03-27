@@ -69,8 +69,12 @@ def create_video(input_folder_path, outvid_path, fps):
     ## so we half it (for now)
     image0 = input_folder_path +"\\"+ imgs_lst[0]
     img0 = cv2.imread(image0)
+
+#    size = (int(img0.shape[1]/2), int(img0.shape[0]/2))
 #    size = ((img0.shape[1]), (img0.shape[0]))
-    size = (int(img0.shape[1]/2), int(img0.shape[0]/2))
+#    size = (640,480)
+    size = (1280,720)
+
 
     ## set params for the vid_output
     is_color = True
@@ -99,7 +103,7 @@ def create_video(input_folder_path, outvid_path, fps):
 #            print(size[0], size[1])
 #            print(size[0]/size[1])
 #            break
-#            img = cv2.resize(img, size)
+            img = cv2.resize(img, size)
 #
 #            img_procesing.draw_on_img(img, img_procesing.get_time(image_file)) ## add time stamp
 #
@@ -158,9 +162,9 @@ def create_gif(input_folder_path, output_path):
                       append_images=frames[:500], save_all=True, duration=10, loop=0)
 
 def main():
-    input_folder_path = r"C:\Users\YasmineMnb\Desktop\agueda and cini\100D7500_croped_4"
-    outvid_path = r"C:\Users\YasmineMnb\Desktop\agueda and cini\100D7500_croped_4.avi"
-    create_video(input_folder_path, outvid_path, 12.0)
+    input_folder_path = r"C:\Users\YasmineMnb\Desktop\SynologyDrive\set_up_2.0\2\2top_croped"
+    outvid_path = r"C:\Users\YasmineMnb\Desktop\SynologyDrive\set_up_2.0\2\2top_croped.avi"
+    create_video(input_folder_path, outvid_path, 24.0)
 
 
 if __name__ == '__main__':
