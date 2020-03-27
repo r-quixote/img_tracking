@@ -6,28 +6,26 @@ import progress_bar
 import img_procesing
 import manual_tracking
 
-##this is a testing note
-
 
 # Save tracked objects rois
-def save_result_rois(output_folder, boxes, bbox_init, tracker_types, init,
-                     image_color_format, object_name, file_name,
+def save_result_rois(output_folder, boxes, bbox_inits, tracker_types, init,
+                       object_name, file_name,
                      output_path, first_tiral):
     # Create directory to save
     pic_time = img_procesing.get_time(file_name)
     dirName = os.path.dirname(output_folder)
     videoName = os.path.splitext(os.path.basename(output_folder))
-    dirName = dirName + "\\" + output_path #9_small_Results_tip1"
+    dirName = dirName + "\\" + output_path
     if not os.path.isdir(dirName):
         os.mkdir(dirName)
-    dirName = dirName + "\\Rois_" + videoName[0] + "_" + image_color_format + "_" + object_name
+    dirName = dirName + "\\Rois_" + videoName[0] + "_" + object_name
     if not os.path.isdir(dirName):
         os.mkdir(dirName)
 
     # Create files and save init box as first line
     if init:
         # Save trackers init roi
-        for i, new_box in enumerate(tracker_types):
+        for i in range(len(tracker_types)):
             # roi file path
             path_tracker_rois = dirName + "\\" + tracker_types[i] + '.txt'
             # create tracker file
@@ -35,57 +33,44 @@ def save_result_rois(output_folder, boxes, bbox_init, tracker_types, init,
                 my_file = open(path_tracker_rois, 'w+')
             else:
                 my_file = open(path_tracker_rois, 'a')
-            # write bbox init
-            if bbox_init:
+
+            for j, bbox_init in enumerate(bbox_inits):
+                print("i = {}, j = {}, bbox = {}".format(i,j,bbox_init))
                 my_file.writelines(", ".join([str(s) for s in list(bbox_init)])+
-                                   ", "+ file_name +", "+ pic_time + ", Start \n")
-
-                # close file
-                my_file.close()
-
-#        # Save ground truth init roi
-#        path_gt_rois = dirName + "\\GT.txt"
-#
-#        # create tracker file
-#        my_file = open(path_gt_rois, 'w+')
-#        print("rois will be saved to: " + my_file.name +"\n"+ ("\n" + 50*"##")*2 + "\n")
-#
-#        # close file
-#        my_file.close()
+                                   ", " + file_name + ", "+ pic_time + ", "
+                                   + str(j) + ", Start \n")
+            # close file
+            my_file.close()
         return path_tracker_rois
-
-    # Append files and save current box
-    for i, new_box in enumerate(boxes):
-        # roi file path
-        path_tracker_rois = dirName + "\\" + tracker_types[i] + '.txt'
-        with open(path_tracker_rois, "a") as my_file:
-            my_file.writelines(", ".join([str(s) for s in list(new_box)]) + ", " +
-                               file_name +", "+ pic_time + ", Auto\n")
-
-    return path_tracker_rois
+    else: # (if not init)
+        # Append files and save current box
+        for i in range(len(tracker_types)):
+            for j, new_box in enumerate(boxes):
+                # roi file path
+                path_tracker_rois = dirName + "\\" + tracker_types[i] + '.txt'
+                with open(path_tracker_rois, "a") as my_file:
+                    my_file.writelines(", ".join([str(round(s, 2)) for s in list(new_box)]) + ", " +
+                                       file_name +", "+ pic_time + ", " + str(j) + ", Auto\n")
+        return path_tracker_rois
 
 
 # set video output for saving
-def create_video_results(video_or_folder_name, frame, image_color_format, object_name, output_path):
-    # dirName = video_or_folder_name + "\\1ResultsPython"
+def create_video_results(video_or_folder_name, frame,   object_name, output_path):
     dirName = os.path.dirname(video_or_folder_name)
     videoName = os.path.splitext(os.path.basename(video_or_folder_name))
-    dirName = dirName + "\\" + output_path#"9_small_Results_tip1"
+    dirName = dirName + "\\" + output_path
     if not os.path.isdir(dirName):
         os.mkdir(dirName)
-    save_video_name = dirName + "\\" + videoName[0] + \
-    "_Opencv2Multitrackers" + "_" + image_color_format + "_" + object_name + ".avi"
+    save_video_name = dirName + "\\" + videoName[0] + object_name + ".avi"
     fourcc = cv2.VideoWriter_fourcc(*"XVID")
     frame_height, frame_width, layers = frame.shape
     video_out = cv2.VideoWriter(save_video_name, fourcc, 24.0, (frame_width, frame_height))
     print("video will be saved to: " + save_video_name)
-    # out = cv2.VideoWriter(save_video_name, fourcc, 20.0, (640, 480))
     return video_out
 
 # create list of colors to use to show trackers
 def get_box_colors():
     colors = []
-    # colors.append((200, 200, 200))  # ground truth
     colors.append((0, 0, 0))  # Black
     colors.append((255, 0, 0))  # Red
     colors.append((0, 255, 0))  # Lime
@@ -120,7 +105,7 @@ def get_box_colors():
 
 # Return a list of all file names in path which are images
 def list_images_in_path(directory):
-    included_extensions = ['jpg', 'bmp', 'png', 'gif', 'jpeg']
+    included_extensions = ['jpg', 'bmp', 'png', 'gif', 'jpeg', 'JPG', 'JPEG']
     onlyfiles = [f for f in os.listdir(directory)
                  if any(f.endswith(ext) for ext in included_extensions)]
 
@@ -144,7 +129,7 @@ def draw_bounding_box(frame, boxes, tracker_ok, timer, #ground_truth_bbox,
 
         p1 = (int(new_box[0]), int(new_box[1]))
         p2 = (int(new_box[0] + new_box[2]), int(new_box[1] + new_box[3]))
-        tracker_type = tracker_types[i]
+#        tracker_type = tracker_types[i]
 
         cv2.rectangle(frame, p1, p2, colors[i + 1], 2, 4)
 # =============================================================================
@@ -162,30 +147,25 @@ def draw_bounding_box(frame, boxes, tracker_ok, timer, #ground_truth_bbox,
             dots = list(map(float, dots))
             x = (int(dots[0] + dots[2]/2))
             y = (int(dots[1] + dots[3]/2))
-            #manual in Orange
+            # auto in red
             if line.split(", ")[-1].strip() == "Auto":
                 cv2.circle(frame, (x, y), 1, (0,0,255), -1)
-            #manual in Orange
+            # manual in Orange
             elif line.split(", ")[-1].strip() == "Manual":
                 cv2.circle(frame, (x, y), 1, (0,150,255), -1)
 
-    if not tracker_ok:
-        # Tracking failure
-        cv2.putText(frame, "Tracking failure detected", (100, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
-#        print("Tracking failure detected")
-
-    # Display FPS on frame
-    if len(boxes) == 1:
-        cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
-
+# ====  Display FPS on frame  =================================================
+#
+#     if len(boxes) == 1:
+#         cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
+#
+# =============================================================================
     return frame
 
 # Create tracker according to tracker_type
 def create_tracker(tracker_type):
     tracker = []
-    if tracker_type == 'BOOSTING':
-        tracker = cv2.TrackerBoosting_create()
-    elif tracker_type == 'MIL':
+    if tracker_type == 'MIL':
         tracker = cv2.TrackerMIL_create()
     elif tracker_type == 'KCF':
         tracker = cv2.TrackerKCF_create()
@@ -193,8 +173,6 @@ def create_tracker(tracker_type):
         tracker = cv2.TrackerTLD_create()
     elif tracker_type == 'MEDIANFLOW':
         tracker = cv2.TrackerMedianFlow_create()
-    elif tracker_type == 'GOTURN':
-        tracker = cv2.TrackerGOTURN_create()
     elif tracker_type == 'MOSSE':
         tracker = cv2.TrackerMOSSE_create()
     elif tracker_type == "CSRT":
@@ -203,7 +181,7 @@ def create_tracker(tracker_type):
 
 
 # return a frame and status, by file name/ video name and frame number
-def load_image_from_file_or_video(run_images_from_folder, video_files, frame_number, video, image_color_format):
+def load_image_from_file_or_video(run_images_from_folder, video_files, frame_number, video):
     if run_images_from_folder:
         if frame_number >= len(video_files):
             ok = False
@@ -221,12 +199,6 @@ def load_image_from_file_or_video(run_images_from_folder, video_files, frame_num
             return ok, []
         ok = True
 
-# ================color messing can't see why==================================
-#         # Convert to RGB
-#         v, u, y = cv2.split(frame)
-#         img_yuv = cv2.merge((y, u, v))
-#         frame = cv2.cvtColor(img_yuv, cv2.COLOR_YCrCb2BGR)
-# =============================================================================
     else:
         # video.set(cv2.cv2_CAP_PROP_POS_FRAMES, frame_number)
         ok, frame = video.read()
@@ -234,46 +206,47 @@ def load_image_from_file_or_video(run_images_from_folder, video_files, frame_num
             print('Cannot read video file')
             sys.exit()
 
-# ================color messing can't see why==================================
-#     # Convert to image format
-#     if image_color_format == 'YUV':
-#         image_yuv = cv2.cvtColor(frame, cv2.COLOR_BGR2YCrCb)
-#         y, u, v = cv2.split(image_yuv)
-#         frame = cv2.merge((v, u, y))
-#     elif image_color_format == 'GRAY':
-#         frame = cv2.cv2tColor(frame, cv2.COLOR_BGR2GRAY)
-#         frame = cv2.cv2tColor(frame, cv2.COLOR_GRAY2BGR)
-# =============================================================================
-
-
     file_name = filename.split(r"6\DSC_")[-1]
     return ok, frame, file_name
 
 
-# Return initial bounding box according to input type
-def get_initial_bounding_box(bounding_box_input_type, bbox_input_roi, frame_to_start, frame):
-    bbox = []
-    if bounding_box_input_type == 'INPUT_ROI':
-        # Define an initial bounding box
-        bbox = bbox_input_roi
-    elif bounding_box_input_type == 'SELECT_ROI':
+## Return initial bounding box from selection
+def get_initial_bounding_box(frame):
+    # origin that works!:
+#    cv2.namedWindow("SELECT ROI", cv2.WINDOW_NORMAL)
+#    bbox = cv2.selectROI("SELECT ROI", frame, True)
+#    return bbox
+
+    # muliple trackers:
+    # creat a copy of the frame to show selected boxes
+    show_selected_frame = frame.copy()
+    bboxs = []
+    while True:
         cv2.namedWindow("SELECT ROI", cv2.WINDOW_NORMAL)
-        bbox = cv2.selectROI("SELECT ROI", frame, True)
-    return bbox
+        bbox = cv2.selectROI("SELECT ROI", show_selected_frame, showCrosshair=True, fromCenter=False)
+        if bbox == (0, 0, 0, 0):
+            break
+        bboxs.append(bbox)
+        # drawing the selected boxes on the copy:
+        for bbox in bboxs:
+            show_selected_frame = cv2.rectangle(show_selected_frame, (bbox[0], bbox[1]), (bbox[0]+bbox[2],bbox[1]+ bbox[3]),
+                                                (50, 50, 200) , 2)
+            show_selected_frame = cv2.line(show_selected_frame, (bbox[0]+int(bbox[2]/2), bbox[1]), (bbox[0]+int(bbox[2]/2), bbox[1]+ bbox[3]),(50, 50, 200),2)
+            show_selected_frame = cv2.line(show_selected_frame, (bbox[0], bbox[1]+int(bbox[3]/2)), (bbox[0]+bbox[2], bbox[1]+int(bbox[3]/2)),(50, 50, 200),2)
+    return bboxs
 
 def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
-                 image_color_format, multi_tracker,video_or_folder_name,
+                   multi_tracker,video_or_folder_name,
                  tracker_types, object_name, output_path, first_tiral,
                  # first_tiral is mine and for difrence between "a" and "w" writing!
                  video_out, colors = get_box_colors()):
-        # loop through frames
+    # loop through frames
     i_frame = frame_to_start
     print(i_frame)
     k = 0
     while True:
         try:
-            ok, frame, f_name = load_image_from_file_or_video(run_images_from_folder, video_files, i_frame, video,
-                                                      image_color_format)
+            ok, frame, f_name = load_image_from_file_or_video(run_images_from_folder, video_files, i_frame, video)
             # Start timer
             timer = cv2.getTickCount()
 
@@ -284,12 +257,10 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
             if not ok:
                 print("\nLost it at -", i_frame)
                 return i_frame, 112
-#                break
-
 
             # save current rois from all trackers to txt files
             path_tracker_rois = save_result_rois(video_or_folder_name, boxes, [],
-                             tracker_types, False, image_color_format, object_name,
+                             tracker_types, False,   object_name,
                              f_name, output_path, first_tiral)
 
             frame_resized  = frame
@@ -327,9 +298,8 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
     return i_frame, k
 
 # Run tracker according to tracking params. Display result on images
-def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_name, frame_to_start,
-                        bounding_box_input_type, bbox_input_roi, #gt_bbox_list,
-                        image_color_format,
+def run_tracker_wrapper(tracker_types, run_images_from_folder,
+                        video_or_folder_name, frame_to_start,
                         object_name, output_path, first_tiral):
     """ The function runs a few opencv2 trackers on a video (which has previously been split into frames)
         then it saves a video of the results
@@ -339,7 +309,7 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
         tracker_types : list
                     a list of the tracker types to run
                     the names should match the types specified in create_tracker funciton
-                    example: ['MIL', 'KCF', 'TLD', 'MEDIANFLOW', 'GOTURN', 'MOSSE', 'CSRT']
+                    example: ['MIL', 'KCF', 'TLD', 'MEDIANFLOW', 'MOSSE', 'CSRT']
         run_images_from_folder : bool
                     if true run on frames what were extraacted from a video, if false run movie.
         video_or_folder_name : str
@@ -348,17 +318,6 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
         frame_to_start : int
                     frame to start tracking
                     example: 0
-        bbox_input_roi: vec?
-                    in case bounding_box_input_type is 'INPUT_ROI' use this as the init roi to the tracker
-                    example: (214.91, 140.22, 88.85, 52)
-        bounding_box_input_type : str
-                    'INPUT_ROI' : take first roi from bbox_input_roi input
-                    'SELECT_ROI' : select roi on screen
-        image_color_format : str
-                    what type of color do you want the trackers to run in
-                    'GRAY' convert YUV input to grayscale
-                    'YUV' leave input unchanged
-                    'RGB' convert YUV images
         object_name : str
                     name to add to end of outputs
                     example: 'obj1'
@@ -371,6 +330,9 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
     if run_images_from_folder:
         video = []
         video_files = list_images_in_path(video_or_folder_name)
+        if video_files == []:
+            print("bad file format for imgs in path!, no files found")
+            sys.exit()
     else:
         video = cv2.VideoCapture(video_or_folder_name)
         # Exit if video not opened.
@@ -382,7 +344,7 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
 
     ok, frame, f_name = load_image_from_file_or_video(run_images_from_folder,
                                                       video_files, frame_to_start,
-                                                      video, image_color_format)
+                                                      video)
     if not ok:
         print('Cannot read load_image_from_file_or_video at init')
         sys.exit()
@@ -397,32 +359,33 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
 #         width_frame = shape_frame[1]
 #         height_frame = shape_frame[0]
 # =============================================================================
-    # Get initial bounding box from user input or ground truth
-    bbox_init = get_initial_bounding_box(bounding_box_input_type, bbox_input_roi, frame_to_start, frame)
+    # Get initial bounding box from user input
+#    bbox_init = get_initial_bounding_box(frame)
+    init_bboxs = get_initial_bounding_box(frame)
     cv2.destroyAllWindows()
     # Initialize MultiTracker
     for tracker_type in tracker_types:
-        print(tracker_type)
-        multi_tracker.add(create_tracker(tracker_type), frame, bbox_init)
+        for bbox in init_bboxs:
+            print(tracker_type)
+            multi_tracker.add(create_tracker(tracker_type), frame, bbox)
 
 #    colors = get_box_colors()  # get colors to display on screen
 
     # set video output for saving
-    video_out = create_video_results(video_or_folder_name, frame, image_color_format, object_name, output_path)
+    video_out = create_video_results(video_or_folder_name, frame,   object_name, output_path)
 
     # save current rois from all trackers to txt files
-    path_tracker_rois = save_result_rois(video_or_folder_name, [], bbox_init,
-                     tracker_types, True, image_color_format, object_name,
-                     f_name, output_path, first_tiral)
+    path_tracker_rois = save_result_rois(video_or_folder_name, [], init_bboxs,
+                                         tracker_types, True,   object_name,
+                                         f_name, output_path, first_tiral)
 
     i_frame = frame_to_start
     while i_frame < len(video_files):
         # Auto tracking
         i_frame, k  = tracker_loop(i_frame, run_images_from_folder, video_files, video,
-                     image_color_format, multi_tracker,video_or_folder_name,
-                     tracker_types, object_name, output_path, first_tiral,
-                     # first_tiral is mine and for difrence between "a" and "w" writing!
-                     video_out, colors = get_box_colors())
+                                   multi_tracker,video_or_folder_name,
+                                   tracker_types, object_name, output_path, first_tiral,
+                                   video_out, colors = get_box_colors())
         # Esc
         if k == 27:
             break
@@ -432,9 +395,8 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
                 i_frame, manual_k = manual_tracking.loop_through_imgs(video_or_folder_name,
                                                                       path_tracker_rois, i_frame,
                                                                       video_out)
-
             else:
-                print("Nope... can't track manualy with video yet")
+                print("Nope... can't track manualy with video")
                 break
             # back to Auto tracking
             if manual_k == 27: #if Esc Key from the tracker continue Auto tracker
@@ -443,70 +405,53 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder, video_or_folder_n
 
                 ok, frame, f_name = load_image_from_file_or_video(run_images_from_folder,
                                                       video_files, i_frame,
-                                                      video, image_color_format)
-                # Get initial bounding box from user input or ground truth
-                bbox_init = get_initial_bounding_box(bounding_box_input_type, bbox_input_roi, i_frame, frame)
+                                                      video)
+                # Get initial bounding box from user input
+                bbox_init = get_initial_bounding_box(frame)
                 cv2.destroyAllWindows()
                 # Initialize MultiTracker
                 for tracker_type in tracker_types:
-                    print(tracker_type)
                     multi_tracker.add(create_tracker(tracker_type), frame, bbox_init)
                 path_tracker_rois = save_result_rois(video_or_folder_name, [], bbox_init,
-                                                     tracker_types, True, image_color_format, object_name,
+                                                     tracker_types, True,   object_name,
                                                      f_name, output_path, first_tiral = False)
 
-
-    percent_done = round(i_frame / len(video_files))
+    percent_done = i_frame / len(video_files)
     progress_bar.update_progress_bar(percent_done, str(i_frame))
     print('\nreached end of video files: frame_number=' + str(i_frame))
-
 
     video_out.release()
     cv2.destroyAllWindows()
 #%%
 def main():
     #%%
-    # Simple example
     run_images_from_folder = True
     frame_to_start = 0  # in the range: [0, number of frames in video-1]
     first_tiral = True # in order to continue from last point
 
-    # Set up which trackers to run # 'BOOSTING', doesn't work for some reason
-    tracker_type_list = ['CSRT']#, 'KCF']# 'TLD', 'MEDIANFLOW','MIL', 'MOSSE'] # 'GOTURN'
-
-    image_color_format = 'YUV' #'GRAY'  # YUV = don't change input format
-
-    # get input from file, selected roi or first ground truth roi
-    bounding_box_input_type = 'SELECT_ROI'
-    bbox_input_roi = []
+    # Choose which trackers to run
+    tracker_type_list = ['CSRT']#, 'KCF']#, 'TLD', 'MEDIANFLOW','MIL', 'MOSSE']
 
     # path with videos or files
-    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
-    output_path = r"9_croped_track_side_FIN_2"
-    object_name = 'Tip_1_3'
+    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_2"
+    output_path = r"Tracked_test" # only LOCAL file name! not full path
+    object_name = '2' #tip name
 
-    #####################################################################################################################
+    outfolder = os.path.dirname(video_or_folder_name) + "\\" + output_path
+
+    if os.path.isdir(outfolder):
+        print("that folder already exists! are you sure you want to continue?")
+        ans = input("y/n? ")
+        if ans == "n":
+            sys.exit()
+
     print("\nstart tracking: ")
-    run_tracker_wrapper(tracker_type_list, run_images_from_folder, video_or_folder_name,
-                        frame_to_start,
-                        bounding_box_input_type, bbox_input_roi, #gt_bbox_list,
-                        image_color_format, object_name, output_path, first_tiral)
+    run_tracker_wrapper(tracker_type_list, run_images_from_folder,
+                        video_or_folder_name, frame_to_start,
+                        object_name, output_path,
+                        first_tiral)
 
 
 #%%
 if __name__ == "__main__":
     main()
-
-# =============================================================================
-#     #%%
-#
-#
-# in_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\6\side"
-# pic_lst  = os.listdir(in_path)
-# last_pic_name_path = in_path + "\\" + pic_lst[-100]
-# img = cv2.imread(last_pic_name_path)
-# cv2.imshow("asd", img)
-# img_1 = cv2.circle(img,(447,63), 63, (0,0,255), -1)
-# cv2.imshow("asd", img_1)
-#
-# =============================================================================

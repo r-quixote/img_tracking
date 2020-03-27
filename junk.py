@@ -2,13 +2,15 @@
 """
 Created on Sun Aug 18 16:37:26 2019
 
-@author: YasmineMnb
+@author: roni
 """
 
 import cv2
 import numpy as np
 
-
+# =============================================================================
+#               basic clicking on blank img
+# =============================================================================
 
 def CallBackFunc(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
