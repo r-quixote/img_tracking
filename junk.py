@@ -33,7 +33,10 @@ def main():
     cv2.setMouseCallback(windowName, CallBackFunc, param = lst)
     while (True):
         cv2.imshow(windowName, img)
-        if cv2.waitKey(20) == 27:
+        k=cv2.waitKey(1) & 0xFF
+        if k !=255:
+            print(k)
+        if k == 27:
             break
 
     print(lst)

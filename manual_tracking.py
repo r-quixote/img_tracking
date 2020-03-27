@@ -10,8 +10,6 @@ import cv2
 import numpy as np
 import img_procesing
 
-
-
 def load_points_from_tracker_file(points_file):
     points_dct = {}
     with open (points_file, "r") as tracker_hist_data:
@@ -89,7 +87,6 @@ def save_added_points(points_dct, points_file, folder_path):
     """
     will only make changes to the points manualy added
     """
-    #%
     line = ""
     for i in sorted(points_dct):
 
@@ -101,11 +98,9 @@ def save_added_points(points_dct, points_file, folder_path):
             box_y = point[1]-box_size/2
             img_time = img_procesing.get_time(full_img_path)
             line = ', '.join(map(str, [box_x, box_y, box_size, box_size, full_img_path, img_time, "Manual"]))
-        #    line += "\n"
             with open(points_file, "a") as out_file:
                 out_file.write(line)
                 out_file.write("\n")
-
 
 
 def loop_through_imgs(folder_path, points_file, i = 0, video_out = None):
@@ -120,7 +115,7 @@ def loop_through_imgs(folder_path, points_file, i = 0, video_out = None):
     # creat the window
     cv2.namedWindow("Tracking", cv2.WINDOW_NORMAL)
     cv2.createTrackbar("trackbar", "Tracking" , 0, len(pic_lst), trackbar_func)
-    #actual loop for the folder
+    # actual loop for the folder
     while i < len(pic_lst):
         curr_pic = pic_lst[i]
         img = cv2.imread(folder_path + "\\" + curr_pic)
@@ -149,9 +144,13 @@ def loop_through_imgs(folder_path, points_file, i = 0, video_out = None):
 
 
 
-#%%  if only manual tracking should be used
+#%%
 
 def main():
+    """
+    if only manual tracking should be used
+    """
+
     folder_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
     i_frame = 0
 

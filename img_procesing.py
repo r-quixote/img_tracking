@@ -117,13 +117,17 @@ def text_on_img(img, text, dx=0, dy=0):
         font_size = img.shape[1]/500
         font_thickness = 2
     font_thickness = 3
-    if font_size>6: font_size = 6
+    if font_size>6:
+        font_size = 6
+    if font_size<1:
+        font_size = 1
+        font_thickness = 1
     init_x_pos = int(img.shape[1]/8)
     init_y_pos = int(img.shape[0]/6)
+    # in case of multi line:
     text = text.split("\n")
     text_hight = cv2.getTextSize(text[0], font, font_size, font_thickness)[0][1]
     y_gap = int(text_hight*1.5)
-    print("font = ", font_size)
     for i,line in enumerate(text):
         pos = (init_x_pos, init_y_pos+y_gap*i)
         img_with_text = cv2.putText(img, line, pos, font, font_size,(90,255,30),font_thickness)

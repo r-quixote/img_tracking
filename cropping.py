@@ -93,10 +93,9 @@ def creat_folder(out_path):
     if not os.path.isdir(out_path):
         os.mkdir(out_path)
         return out_path
-#%%
+
 def main():
-    #%%
-    in_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side"
+    in_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_2"
     out_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\test"
 
     pic_lst  = os.listdir(in_path)
@@ -114,14 +113,11 @@ def main():
     ## add timestamp to img
     first_img_file_time = img_procesing.get_time(in_path + "\\" + pic_lst[0])
     last_img_file_time = img_procesing.get_time(last_pic_name_path)
-    text1 = "First frame time:  " + first_img_file_time
-    text2 = "Last frame time:  "  + last_img_file_time
-    f_text = text1+"\n"+text2
-    last_img_file_time = img_procesing.text_on_img(last_img, f_text)
-#    last_img_file_time = img_procesing.text_on_img(last_img, text2, 10,10)
+    text = "First frame time: {}\nLast frame time: {}".format(first_img_file_time,
+                                                              last_img_file_time)
+    last_img_file_time = img_procesing.text_on_img(last_img, text)
 
     ## click and drag to select region of interest (ROI)
-
     ROI = get_ROI(last_img)
     cv2.destroyAllWindows()
 
@@ -133,6 +129,6 @@ def main():
     else:
         print("\nnow croping :)")
         crop_all(ROI[0], ROI[1], ROI[3], ROI[2], in_path, out_path, pic_lst)
-#%%
+
 if __name__ == "__main__":
     main()
