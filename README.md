@@ -8,5 +8,6 @@ tracker can be paused for manual tracking
 * can't got to manual when tracking multiple points
 
 
+
 2DO someday:
 * add GUI
