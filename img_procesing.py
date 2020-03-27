@@ -110,13 +110,23 @@ def get_time(file_path):
     STAT = os.stat(file_path)
     return time.strftime('%d-%m %H:%M', time.localtime(STAT[ST_MTIME]))
 
-def draw_on_img(img, text):
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    font_size = img.shape[0]/400
+def text_on_img(img, text, dx=0, dy=0):
+    font = 5
+    font_size = img.shape[0]/1000
     if img.shape[1]*1.5 < img.shape[0]:
-        font_size = img.shape[1]/300
+        font_size = img.shape[1]/500
+        font_thickness = 2
+    font_thickness = 3
     if font_size>6: font_size = 6
-    img_with_text = cv2.putText(img, text, (10,int(img.shape[0]/6)), font, font_size,(255,255,255),2,cv2.LINE_AA)
+    init_x_pos = int(img.shape[1]/8)
+    init_y_pos = int(img.shape[0]/6)
+    text = text.split("\n")
+    text_hight = cv2.getTextSize(text[0], font, font_size, font_thickness)[0][1]
+    y_gap = int(text_hight*1.5)
+    print("font = ", font_size)
+    for i,line in enumerate(text):
+        pos = (init_x_pos, init_y_pos+y_gap*i)
+        img_with_text = cv2.putText(img, line, pos, font, font_size,(90,255,30),font_thickness)
     return img_with_text
 
 def rotate_img(img, angle):

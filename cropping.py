@@ -21,9 +21,9 @@ def crop_all(x,y,h,w, in_path, out_path, pic_lst):
     crop the entire list of pictures
     pic_list shoud be a list of the names of the files
     """
-    #%
-    t = time.perf_counter() ## need this for the progress bar
-    cv2.namedWindow("croping")#, cv2.WINDOW_NORMAL)
+    ## need this for the progress bar
+    t = time.perf_counter()
+    cv2.namedWindow("croping", cv2.WINDOW_NORMAL)
 
     for i in range(len(pic_lst)):
         pic_name = pic_lst[i]
@@ -39,21 +39,20 @@ def crop_all(x,y,h,w, in_path, out_path, pic_lst):
                 estimate = estimate/60
             estimate = "%.1f minutes"%(estimate)
             progress_bar.update_progress_bar(perc/100, "time left - "+ estimate)
+
         ## actual croping
         frame = cv2.imread(img)
         croped = crop(frame, x,y,h,w, "croping")
 
-# ========= if anything should be done with img enter code here ===============
-#
+# ========= if anything should be done with imgs enter code here ===============
 #         rtd = img_procesing.rotate_img(croped,180) ## for instance rotation
-#
 # =============================================================================
+
         cv2.imshow("croping", croped)
         cv2.waitKey(1)
-
-
-
         cv2.imwrite(new_pic_name,croped)
+
+    ##progress bar again...
     perc = (i/len(pic_lst))*100
     progress_bar.update_progress_bar(perc/100, " time left: "+str(estimate))
     print("\nin {} seconds".format(time.perf_counter() - t))
@@ -71,7 +70,7 @@ def get_ROI(img):
     cv2.namedWindow("SELECT ROI", cv2.WINDOW_NORMAL)
     cv2.waitKey(1)
     print("\nuse `space` or `enter` to confirm selection")
-    print("use `c`     or `Esc`   to cancel selection (function will return zero by zero)\n")
+    print("use `c`     or `Esc`   to cancel selection (function will return [0,0])\n")
     bbox = cv2.selectROI("SELECT ROI", img, True)
     cv2.destroyWindow("SELECT ROI")
     return bbox
@@ -84,7 +83,7 @@ def creat_folder(out_path):
     """
     if os.path.isdir(out_path):
         ans = input("HEY! output folder already exists. \
-		if u want to change it pleas enter new name now")
+                    ant to change it pleas enter new name now")
         if ans == "":
             print("OK then")
             return out_path
@@ -94,14 +93,17 @@ def creat_folder(out_path):
     if not os.path.isdir(out_path):
         os.mkdir(out_path)
         return out_path
-
+#%%
 def main():
+    #%%
     in_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side"
-    out_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_3"
+    out_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\test"
 
     pic_lst  = os.listdir(in_path)
     #pic_lst = pic_lst[:476]   ## for spesific stop...
-    if len(pic_lst) != len(os.listdir(in_path)): ##just for when i forget
+    ## in case i forget to turn back to all pics:
+
+    if len(pic_lst) != len(os.listdir(in_path)):
         print("\n\nHEY!\n you didn't take all the pictures\n\n")
 
     out_path = creat_folder(out_path)
@@ -109,18 +111,28 @@ def main():
     ## showing last pic of folder
     last_pic_name_path = in_path + "\\" + pic_lst[-1]
     last_img = cv2.imread(last_pic_name_path)
+    ## add timestamp to img
+    first_img_file_time = img_procesing.get_time(in_path + "\\" + pic_lst[0])
+    last_img_file_time = img_procesing.get_time(last_pic_name_path)
+    text1 = "First frame time:  " + first_img_file_time
+    text2 = "Last frame time:  "  + last_img_file_time
+    f_text = text1+"\n"+text2
+    last_img_file_time = img_procesing.text_on_img(last_img, f_text)
+#    last_img_file_time = img_procesing.text_on_img(last_img, text2, 10,10)
+
     ## click and drag to select region of interest (ROI)
+
     ROI = get_ROI(last_img)
     cv2.destroyAllWindows()
 
-
-    if (ROI[2] or ROI[3]) == 0: ## if selection was canceled ROI has dimension of 0
+    ## if selection was canceled (ESC) ROI has dimension of 0
+    if (ROI[2] or ROI[3]) == 0:
         print("\n###############\
               you canceled...\
               ###############")
     else:
         print("\nnow croping :)")
         crop_all(ROI[0], ROI[1], ROI[3], ROI[2], in_path, out_path, pic_lst)
-
+#%%
 if __name__ == "__main__":
     main()
