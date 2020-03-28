@@ -16,8 +16,11 @@ keep in mind that this was written to be used with an open terminal - seeing the
 **2DO:**
 - [X] ~~add tracking for second point in order to track angle between 2 points~~
 - [ ] can't go to manual when tracking multiple points
-	- [ ] manual still needs 
+	- [ ] manual still needs all sorts of work
 - [ ] add run from terminal
+- [ ] file name indepence (trial with imgs from PI/webcam/other name format)
+	- [ ] figure out filename independent way to find timestamp
+
 
 
 **2DO - not really important:**
