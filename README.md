@@ -1,5 +1,5 @@
 # cropping for folder, convert imgs to video, tracker2.1 
-
+------------
 
 keep in mind that this was written to be used with an open terminal - seeing the printed msgs from the script
 ------------
