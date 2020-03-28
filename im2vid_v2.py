@@ -83,6 +83,7 @@ def create_video(input_folder_path, outvid_path, fps):
 
     ## for the progress bar we need to note the start time
     t = time.perf_counter()
+    job_len = len(imgs_lst) #for time estimate
 
     try:
 #        frames = []            ## for gif saving
@@ -113,19 +114,14 @@ def create_video(input_folder_path, outvid_path, fps):
             cv2.imshow("img", img)
             cv2.waitKey(1)
 
+            ## write to video file
             vid.write(img)
 
-            ## just for progress tracking:
+            ## just for the progress bar:
             perc = i/len(imgs_lst)
-            if perc >0:
-                delt = time.perf_counter() - t
-                estimate = (delt/perc) - delt
-                estimate = int(estimate)
-                if estimate > 70:
-                    estimate = str(int(estimate/60))+" min"
-                else: estimate = str(estimate) + " sec"
-                progress_bar.update_progress_bar(perc, " time left ~ " + estimate)
-        progress_bar.update_progress_bar(1, "\nDone")
+            progress_bar.update_progress_bar(perc)
+
+        progress_bar.update_progress_bar(1)
 
     except KeyboardInterrupt:
         print("cought: Keyboard Interrupt")
@@ -160,10 +156,10 @@ def create_gif(input_folder_path, output_path):
                       append_images=frames[1:500], save_all=True, duration=40, loop=0)
 
 def main():
-    input_folder_path = r"C:\Users\YasmineMnb\Desktop\SynologyDrive\set_up_2.0\2\2top_croped"
-    outvid_path = r"C:\Users\YasmineMnb\Desktop\SynologyDrive\set_up_2.0\2\2top_croped.avi"
+    input_folder_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_1"
+    outvid_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_1.avi"
     create_video(input_folder_path, outvid_path, 24.0)
-    create_gif(input_folder_path,outvid_path.replace(".avi", ".gif"))
+#    create_gif(input_folder_path,outvid_path.replace(".avi", ".gif"))
 
 if __name__ == '__main__':
     main()

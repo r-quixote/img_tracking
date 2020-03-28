@@ -21,9 +21,10 @@ def crop_all(x,y,h,w, in_path, out_path, pic_lst):
     crop the entire list of pictures
     pic_list shoud be a list of the names of the files
     """
-    ## need this for the progress bar
-    t = time.perf_counter()
     cv2.namedWindow("croping", cv2.WINDOW_NORMAL)
+
+    ## see how long this takes
+    t = time.perf_counter()
 
     for i in range(len(pic_lst)):
         pic_name = pic_lst[i]
@@ -31,14 +32,8 @@ def crop_all(x,y,h,w, in_path, out_path, pic_lst):
         new_pic_name = out_path +"\\" + pic_name.split(".")[0].strip("DSC_")+"_CROPED.jpg"
 
         ##progress bar
-        perc = (i/len(pic_lst))*100
-        delt = time.perf_counter() - t
-        if perc>0:
-            estimate = (delt/perc)*100 - delt
-            if estimate > 70:
-                estimate = estimate/60
-            estimate = "%.1f minutes"%(estimate)
-            progress_bar.update_progress_bar(perc/100, "time left - "+ estimate)
+        perc = (i/len(pic_lst))
+        progress_bar.update_progress_bar(perc)
 
         ## actual croping
         frame = cv2.imread(img)
@@ -52,10 +47,9 @@ def crop_all(x,y,h,w, in_path, out_path, pic_lst):
         cv2.waitKey(1)
         cv2.imwrite(new_pic_name,croped)
 
-    ##progress bar again...
-    perc = (i/len(pic_lst))*100
-    progress_bar.update_progress_bar(perc/100, " time left: "+str(estimate))
-    print("\nin {} seconds".format(time.perf_counter() - t))
+    ## progress bar again...
+    progress_bar.update_progress_bar(1)
+    print("\n\nfinished in {} seconds".format(round(time.perf_counter() - t,2)))
 
 def get_ROI(img):
     """
@@ -70,7 +64,7 @@ def get_ROI(img):
     cv2.namedWindow("SELECT ROI", cv2.WINDOW_NORMAL)
     cv2.waitKey(1)
     print("\nuse `space` or `enter` to confirm selection")
-    print("use `c`     or `Esc`   to cancel selection (function will return [0,0])\n")
+    print("use `c`     or `Esc`   to cancel selection (function will return [0,0])")
     bbox = cv2.selectROI("SELECT ROI", img, True)
     cv2.destroyWindow("SELECT ROI")
     return bbox
