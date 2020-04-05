@@ -36,10 +36,10 @@ keep in mind that this was written to be used with an open terminal/from within 
 
 _**2DO someday (maybe...):**_
 - [ ] add GUI (browser based app?)
-- [ ] linux/PI compatible?
+- [ ] linux / Raspberry PI compatible?
 
 ------------
-#suggestions are more then welcome!
+# suggestions are more then welcome!
 
 wishlist:
 - [ ]
