@@ -5,6 +5,12 @@ keep in mind that this was written to be used with an open terminal/from within 
 (while seeing the printed msgs from the script)
 ------------
 ##### need to add *how to use tracker* section here
+
+##### How to:
+
+1. ![tip with track](examples/tip with track.png)
+2. ![tip with track](examples/tip with track.png)
+
 ------------
 
 ##### whats new:
