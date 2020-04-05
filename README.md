@@ -8,7 +8,7 @@ keep in mind that this was written to be used with an open terminal/from within 
 
 ##### How to:
 
-![tip with track](examples\tip with track.png)
+![tip with track](examples\tip%20with%20track.png)
 
 
 ------------
