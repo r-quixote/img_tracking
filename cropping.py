@@ -1,8 +1,11 @@
 import time
 import cv2
 import os
+
 import progress_bar
 import img_procesing
+from GUI import GUI
+
 
 def crop(img, x, y, h, w, name):
     """
@@ -77,7 +80,7 @@ def creat_folder(out_path):
     """
     if os.path.isdir(out_path):
         ans = input("HEY! output folder already exists. \
-                    ant to change it pleas enter new name now")
+                    to change it pleas enter new name now")
         if ans == "":
             print("OK then")
             return out_path
@@ -89,8 +92,11 @@ def creat_folder(out_path):
         return out_path
 
 def main():
-    in_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_2"
-    out_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\test"
+#    in_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_2"
+#    out_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\test"
+
+    in_path = GUI.filedialog_loop("choose input folder")
+    out_path = GUI.filedialog_loop("choose output folder \n(where to save to?)")
 
     pic_lst  = os.listdir(in_path)
     #pic_lst = pic_lst[:476]   ## for spesific stop...
@@ -99,7 +105,10 @@ def main():
     if len(pic_lst) != len(os.listdir(in_path)):
         print("\n\nHEY!\n you didn't take all the pictures\n\n")
 
-    out_path = creat_folder(out_path)
+    if len(os.listdir(out_path))>0:
+        print("there are other imgs there!")
+
+#    out_path = creat_folder(out_path)
 
     ## showing last pic of folder
     last_pic_name_path = in_path + "\\" + pic_lst[-1]

@@ -14,22 +14,23 @@ keep in mind that this was written to be used with an open terminal/from within 
 ------------
 
 ##### whats new:
-* tracker can be paused with 'p' for manual tracking.
+* tracker can be paused with 'p' for manual tracking *(of one point only!)* .
 * several types of tracker can be used at the same time.
 * several initial rois can be selected at begining of tracking
 * added timestamp to img cropping
+* added simple file choosing dialog to cropping - needs fine tuning
 
 ------------
 **2DO:**
 - [X] ~~add tracking for second point in order to track angle between 2 points~~
 - [ ] can't go to manual when tracking multiple points
 	(in general manual still needs all sorts of work...)
-- [ ] add run from terminal
+- [] add run from terminal
+	- [] finish more robust file dialog for cropping   
 - [ ] file name indepence (trial with imgs from PI/webcam/other name format)
 	- [ ] figure out filename independent way to find timestamp
 
-
-
+	
 **2DO - not really important:**
 - [X] add timestamp to crop last img
 - [ ] add brightness controll to img_procesing.py - maybe auto brightness correction for imgs with natural lighting
@@ -37,8 +38,6 @@ keep in mind that this was written to be used with an open terminal/from within 
 - [ ] add help section for img_procesing
 - [ ] add cropping several parts to cropping.py
 
-
-  
 
 _**2DO someday (maybe...):**_
 - [ ] add GUI (browser based app?)
