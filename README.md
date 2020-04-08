@@ -26,7 +26,9 @@ keep in mind that this was written to be used with an open terminal/from within 
 - [ ] can't go to manual when tracking multiple points
 	(in general manual still needs all sorts of work...)
 - [ ] add run from terminal
-	- [ ] finish more robust file dialog for cropping   
+	- [ ] finish more robust file dialog for cropping.py  
+	- [ ] add file dialog for tracker_21.py
+	- [ ] add file dialog for im2vid_v2.py
 - [ ] file name indepence (trial with imgs from PI/webcam/other name format)
 	- [ ] figure out filename independent way to find timestamp
 
