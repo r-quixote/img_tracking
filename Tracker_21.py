@@ -119,7 +119,7 @@ def list_images_in_path(directory):
 def draw_bounding_box(frame, boxes, tracker_ok, timer, #ground_truth_bbox,
                       tracker_types, colors, i_frame, path_tracker_rois):
     # Calculate Frames per second (FPS)
-    fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
+#    fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
 
     color_i = 0
 
@@ -434,7 +434,7 @@ def main():
 
     # path with videos or files
     video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_2"
-    output_path = r"Tracked_test" # only LOCAL file name! not full path
+    output_path = r"Tracked____test" # only LOCAL file name! not full path
     object_name = '2' #tip name
 
     outfolder = os.path.dirname(video_or_folder_name) + "\\" + output_path

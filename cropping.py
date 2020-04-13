@@ -34,12 +34,13 @@ def crop_all(x,y,h,w, in_path, out_path, pic_lst):
         img = in_path + "\\" + pic_lst[i]
         new_pic_name = out_path +"\\" + pic_name.split(".")[0].strip("DSC_")+"_CROPED.jpg"
 
-        ##progress bar
+        ## progress bar
         perc = (i/len(pic_lst))
         progress_bar.update_progress_bar(perc)
 
-        ## actual croping
+        ## load img
         frame = cv2.imread(img)
+        ## actual croping
         croped = crop(frame, x,y,h,w, "croping")
 
 # ========= if anything should be done with imgs enter code here ===============
@@ -47,12 +48,16 @@ def crop_all(x,y,h,w, in_path, out_path, pic_lst):
 # =============================================================================
 
         cv2.imshow("croping", croped)
-        cv2.waitKey(1)
+        k = cv2.waitKey(1) & 0xff
+        if k == 27 or k == ord('q'): # Esc/q key to stop
+            print("\n\n!!! You Stoped !!!")
+            break
         cv2.imwrite(new_pic_name,croped)
 
     ## progress bar again...
-    progress_bar.update_progress_bar(1)
-    print("\n\nfinished in {} seconds".format(round(time.perf_counter() - t,2)))
+    if k != 27 and k != ord('q'):
+        progress_bar.update_progress_bar(1)
+        print("\n\nfinished in {} seconds".format(round(time.perf_counter() - t,2)))
 
 def get_ROI(img):
     """
@@ -92,11 +97,11 @@ def creat_folder(out_path):
         return out_path
 
 def main():
-#    in_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_2"
-#    out_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\test"
+    in_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side"
+    out_path = r"C:\Users\YasmineMnb\Desktop\__test__"
 
-    in_path = GUI.filedialog_loop("choose input folder")
-    out_path = GUI.filedialog_loop("choose output folder \n(where to save to?)")
+#    in_path = GUI.filedialog_loop("choose input folder")
+#    out_path = GUI.filedialog_loop("choose output folder \n(where to save to?)")
 
     pic_lst  = os.listdir(in_path)
     #pic_lst = pic_lst[:476]   ## for spesific stop...
@@ -108,7 +113,7 @@ def main():
     if len(os.listdir(out_path))>0:
         print("there are other imgs there!")
 
-#    out_path = creat_folder(out_path)
+    out_path = creat_folder(out_path)
 
     ## showing last pic of folder
     last_pic_name_path = in_path + "\\" + pic_lst[-1]
@@ -123,7 +128,7 @@ def main():
     ## click and drag to select region of interest (ROI)
     ROI = get_ROI(last_img)
     cv2.destroyAllWindows()
-
+    print(ROI)
     ## if selection was canceled (ESC) ROI has dimension of 0
     if (ROI[2] or ROI[3]) == 0:
         print("\n###############\
