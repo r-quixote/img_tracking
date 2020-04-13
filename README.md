@@ -5,8 +5,14 @@ cropping for folder, convert imgs to video, tracker2.1
 you need `opencv contrib` for python in order for any of this to work.
 This was written to be used with an open terminal/from within spyder
 (while seeing the printed msgs from the script)
+
 ------------
 
+
+## Table of Contents:
+- [cropping for entire folder](#how-to-use-croppingpy)
+- [from image folder to video file](#how-to-use-im2vid_v2py)
+- [How to use Tracker](#how-to-use-tracker_21py)
 
 ##  cropping.py allows you to crop all images in a certain folder and save the resulting imgs to a new folder
 #### How to use cropping.py:
@@ -16,17 +22,22 @@ This was written to be used with an open terminal/from within spyder
 	 - otherwise you can just change the variables `in_path` and `out_path` in the `main()` function.
 3. the **last** image of the folder should then be shown - choose the area you want to crop.
 
-![select_ROI](examples/select_ROI_exmp.png)
+<img src="examples/select_ROI_exmp.png" alt="tip_with_track" width="450" height="350">
 
 4. you can use `q` or `ESC` on keyboard to stop.
 5. let the magic happen... TADA!
 
+#### How to use im2vid_v2.py:
+1.
+2. 
+3.
 
+#### How to use Tracker_21.py:
+1.
+2. 
+3.
 
-
-##### need to add *how to use tracker* section here
-![tip_with_track](examples/tip%20with%20track.png)
-
+<img src="examples/tip%20with%20track.png" alt="tip_with_track" width="200" height="300">
 
 ------------
 
@@ -89,3 +100,5 @@ not like this:
 	...
 	-img_12
 	-img_13
+	
+![keep for refrence](examples/tip%20with%20track.png)
