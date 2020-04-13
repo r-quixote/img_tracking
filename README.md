@@ -15,7 +15,9 @@ This was written to be used with an open terminal/from within spyder
 	 - there should be a simple file choosing dialog pop up. 
 	 - otherwise you can just change the variables `in_path` and `out_path` in the `main()` function.
 3. the **last** image of the folder should then be shown - choose the area you want to crop.
+
 ![select_ROI](examples/select_ROI_exmp.png)
+
 4. you can use `q` or `ESC` on keyboard to stop.
 5. let the magic happen... TADA!
 
