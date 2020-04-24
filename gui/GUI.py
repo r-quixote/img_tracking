@@ -4,9 +4,6 @@ Created on Tue Aug 27 15:49:29 2019
 
 @author: Roni
 """
-
-
-
 #%%
 import tkinter as tk
 
@@ -14,13 +11,13 @@ from tkinter import ttk
 import PIL.Image, PIL.ImageTk
 from tkinter import filedialog, messagebox
 import cv2
+import sys
 
 #import img_procesing
 
 def popupmsg(msg):
     def canceled(popup_window):
         popup_window.destroy()
-        import sys
         try: sys.exit()
         except: raise Exception ("Error")
     popup = tk.Tk()
@@ -52,10 +49,25 @@ def open_simple_filedialog(msg):
     # show an "Open" dialog box and return the path to the selected file
     if not ok:
         return '', ok
-    filename = filedialog.askdirectory(parent=root) # initialdir=data_dir
+    filename = filedialog.askdirectory(parent=root, initialdir = "/", title = "Select file") # initialdir=data_dir
     root.destroy()
     return filename, ok
-import sys
+
+def open_file_save_dialog(msg):
+    root = tk.Tk()
+    root.lift()
+    root.attributes("-topmost", True)
+    root.withdraw() # we don't want a full GUI, so keep the root window from appearing
+    root.focus_force()
+    ok = messagebox.askokcancel("msgbox", msg, master = root)
+    # show an "Open" dialog box and return the path to the selected file
+    if not ok:
+        return '', ok
+    filename = filedialog.asksaveasfilename(parent=root, initialdir = "/",title = "Select file", filetypes = (("avi video","*.avi"),("all files","*.*")))
+    root.destroy()
+    return filename, ok
+
+
 def filedialog_loop(msg):
     file_path = ""
     while True:

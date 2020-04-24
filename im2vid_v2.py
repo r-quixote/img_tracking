@@ -94,7 +94,7 @@ def create_video(input_folder_path, outvid_path, fps):
                 break
 # ========== if anything should be done with img enter code here ==============
 #
-#            img = img_procesing.rotate_img(img,180)
+#            img = img_procesing.rotate_img(img,90)
 #
 #            dots_img = remove_blue(img)
 #            img = np.concatenate((img, dots_img), axis=1) ## add next to each other
@@ -105,7 +105,7 @@ def create_video(input_folder_path, outvid_path, fps):
 #            print(size[0]/size[1])
 #            break
             img = cv2.resize(img, size)
-#            img_procesing.draw_on_img(img, img_procesing.get_time(image_file)) ## add time stamp
+            img_procesing.text_on_img(img, img_procesing.get_time(image_file)) ## add time stamp
 #
 # =============================================================================
 
@@ -156,9 +156,14 @@ def create_gif(input_folder_path, output_path):
                       append_images=frames[1:500], save_all=True, duration=40, loop=0)
 
 def main():
-    input_folder_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_1"
-    outvid_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_1.avi"
-    create_video(input_folder_path, outvid_path, 24.0)
+    input_folder_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_5"
+    outvid_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_5.avi"
+
+#    in_path = GUI.filedialog_loop("choose input folder")
+#    out_path = GUI.filedialog_loop("choose output folder \n(file will be saved with same name as inputfolder)")
+
+
+    create_video(input_folder_path, outvid_path, 12.0)
 #    create_gif(input_folder_path,outvid_path.replace(".avi", ".gif"))
 
 if __name__ == '__main__':

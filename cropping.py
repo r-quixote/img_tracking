@@ -97,11 +97,9 @@ def creat_folder(out_path):
         return out_path
 
 def main():
-    in_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side"
-    out_path = r"C:\Users\YasmineMnb\Desktop\__test__"
+#    in_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side"
+#    out_path = r"C:\Users\YasmineMnb\Desktop\__test__"
 
-#    in_path = GUI.filedialog_loop("choose input folder")
-#    out_path = GUI.filedialog_loop("choose output folder \n(where to save to?)")
 
     pic_lst  = os.listdir(in_path)
     #pic_lst = pic_lst[:476]   ## for spesific stop...

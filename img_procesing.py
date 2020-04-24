@@ -110,6 +110,30 @@ def get_time(file_path):
     STAT = os.stat(file_path)
     return time.strftime('%d-%m %H:%M', time.localtime(STAT[ST_MTIME]))
 
+def get_time_delta(str_img_time, cur_img_time):
+    """converts both to time since epoch and the converts back to string in 00:00 H form"""
+    # convert start
+    start_time = time.strptime(str_img_time+" -2000", '%d-%m %H:%M -%Y') # year added cause default dosn't work
+    epoch_start = time.mktime(start_time)
+
+    # convert curr_img
+    curr_time = time.strptime(cur_img_time+" -2000", '%d-%m %H:%M -%Y') # year added cause default dosn't work
+    epoch_curr = time.mktime(curr_time)
+
+    # get delta and convert back to string
+    delta = epoch_curr - epoch_start
+
+
+    H = str(int(delta/60/60))
+    M = str(int(delta/60 % 60))
+    print(H+":"+M)
+    delt_str = H+":"+M
+#    else:
+#        delt_str = time.strftime('%H:%M',time.localtime(delta))
+    return delt_str
+
+
+
 def text_on_img(img, text, dx=0, dy=0):
     font = 5
     font_size = img.shape[0]/1000
@@ -140,13 +164,27 @@ def rotate_img(img, angle):
 #    cv2.waitKey(0)
     return rotated
 
-def resize_img(img, angle):
-    resized = []
-#    cv2.imshow("Resized", resized)
-#    cv2.waitKey(0)
+def resize_img(img, scale_percent):
+
+    if scale_percent > 10:
+        width = int(img.shape[1] * scale_percent / 100)
+        height = int(img.shape[0] * scale_percent / 100)
+    else:
+        width = int(img.shape[1] * scale_percent)
+        height = int(img.shape[0] * scale_percent)
+    dim = (width, height)
+    # resize image
+    resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
     return resized
 
 
+#img = cv2.imread(r"C:\Users\YasmineMnb\Desktop\Roni_new\python scripts\testing env\tracking\examples\select_ROI_exmp_Big.png")
+##img = cv2.imread(r"C:\Users\YasmineMnb\Desktop\Roni_new\python scripts\testing env\tracking\examples\tip with track.png")
+#
+#small = resize_img(img, 0.7)
+#print(small.shape)
+#
+#cv2.imwrite(r"C:\Users\YasmineMnb\Desktop\Roni_new\python scripts\testing env\tracking\examples\select_ROI_exmp.png", small)
 
 #%%
 

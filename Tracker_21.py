@@ -72,9 +72,10 @@ def create_video_results(video_or_folder_name, frame,   object_name, output_path
 def get_box_colors():
     colors = []
     colors.append((0, 0, 0))  # Black
-    colors.append((255, 0, 0))  # Red
-    colors.append((0, 255, 0))  # Lime
-    colors.append((0, 0, 255))  # Blue
+    colors.append((255, 0, 0))  # Blue
+    colors.append((200, 200, 0))  # Cyan
+    colors.append((0, 200, 0))  # Lime
+    colors.append((0, 0, 255))  # Red
     colors.append((255, 255, 0))  # Yellow
     colors.append((0, 255, 255))  # Cyan
     colors.append((255, 0, 255))  # Magenta
@@ -143,22 +144,23 @@ def draw_bounding_box(frame, boxes, tracker_ok, timer, #ground_truth_bbox,
     # draw tracked path
     with open (path_tracker_rois, "r") as tracker_hist_data:
         for line in tracker_hist_data:
+            num = int(line.split(",")[-2])
+            col_tup = (0, 100*num, 255-10*num)
+            print(col_tup)
             dots = (line.split(", C")[0]).split(", ")
             dots = list(map(float, dots))
             x = (int(dots[0] + dots[2]/2))
             y = (int(dots[1] + dots[3]/2))
             # auto in red
             if line.split(", ")[-1].strip() == "Auto":
-                cv2.circle(frame, (x, y), 1, (0,0,255), -1)
+                cv2.circle(frame, (x, y), 1, col_tup, -1)
             # manual in Orange
             elif line.split(", ")[-1].strip() == "Manual":
                 cv2.circle(frame, (x, y), 1, (0,150,255), -1)
 
 # ====  Display FPS on frame  =================================================
-#
 #     if len(boxes) == 1:
 #         cv2.putText(frame, "FPS : " + str(int(fps)), (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
-#
 # =============================================================================
     return frame
 
@@ -236,10 +238,11 @@ def get_initial_bounding_box(frame):
     return bboxs
 
 def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
-                   multi_tracker,video_or_folder_name,
+                 multi_tracker,video_or_folder_name,
                  tracker_types, object_name, output_path, first_tiral,
                  # first_tiral is mine and for difrence between "a" and "w" writing!
                  video_out, colors = get_box_colors()):
+    str_img_time = img_procesing.get_time(video_files[0])
     # loop through frames
     i_frame = frame_to_start
     print(i_frame)
@@ -269,8 +272,15 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
                                               tracker_types, colors, i_frame,
                                               path_tracker_rois)
 
+            t = img_procesing.get_time(f_name)
+            dt = img_procesing.get_time_delta(str_img_time, t)
+            img_procesing.text_on_img(frame_with_box, dt)
+
+
+
             cv2.namedWindow('Tracking', cv2.WINDOW_NORMAL)
             cv2.imshow("Tracking", frame_with_box)
+
             video_out.write(frame_with_box)
 
             # Exit if ESC pressed
@@ -433,9 +443,9 @@ def main():
     tracker_type_list = ['CSRT']#, 'KCF']#, 'TLD', 'MEDIANFLOW','MIL', 'MOSSE']
 
     # path with videos or files
-    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_2"
-    output_path = r"Tracked____test" # only LOCAL file name! not full path
-    object_name = '2' #tip name
+    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_5"
+    output_path = r"Tracked_5_angle____test" # only LOCAL file name! not full path
+    object_name = '5____test' #tip name
 
     outfolder = os.path.dirname(video_or_folder_name) + "\\" + output_path
 
