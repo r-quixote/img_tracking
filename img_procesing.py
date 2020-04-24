@@ -125,8 +125,11 @@ def get_time_delta(str_img_time, cur_img_time):
 
 
     H = str(int(delta/60/60))
-    M = str(int(delta/60 % 60))
-    print(H+":"+M)
+    M = int(delta/60 % 60)
+    if M<10:
+        M = "0" + str(M)
+    else:
+        M = str(M)
     delt_str = H+":"+M
 #    else:
 #        delt_str = time.strftime('%H:%M',time.localtime(delta))

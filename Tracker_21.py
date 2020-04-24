@@ -146,7 +146,6 @@ def draw_bounding_box(frame, boxes, tracker_ok, timer, #ground_truth_bbox,
         for line in tracker_hist_data:
             num = int(line.split(",")[-2])
             col_tup = (0, 100*num, 255-10*num)
-            print(col_tup)
             dots = (line.split(", C")[0]).split(", ")
             dots = list(map(float, dots))
             x = (int(dots[0] + dots[2]/2))
@@ -443,9 +442,9 @@ def main():
     tracker_type_list = ['CSRT']#, 'KCF']#, 'TLD', 'MEDIANFLOW','MIL', 'MOSSE']
 
     # path with videos or files
-    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_5"
-    output_path = r"Tracked_5_angle____test" # only LOCAL file name! not full path
-    object_name = '5____test' #tip name
+    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_1"
+    output_path = r"Tracked_1_angle" # only LOCAL file name! not full path
+    object_name = '' #tip name
 
     outfolder = os.path.dirname(video_or_folder_name) + "\\" + output_path
 
