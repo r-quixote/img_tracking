@@ -180,39 +180,48 @@ def resize_img(img, scale_percent):
     resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
     return resized
 
+def copy_folder_content(in_path, out_path):
+    import shutil
+    pic_lst  = os.listdir(in_path)
+    for i in range(len(pic_lst)):
+        if len(pic_lst[i])>8:
+            new_name = pic_lst[i].replace("0","",1)
+        else:
+            new_name = pic_lst[i]
+        src = in_path + "\\" +  pic_lst[i]
+        dst = out_path + "\\" +  new_name
+#        print(src,"\n", dst)
+        shutil.copy(src,dst)
 
-#img = cv2.imread(r"C:\Users\YasmineMnb\Desktop\Roni_new\python scripts\testing env\tracking\examples\select_ROI_exmp_Big.png")
-##img = cv2.imread(r"C:\Users\YasmineMnb\Desktop\Roni_new\python scripts\testing env\tracking\examples\tip with track.png")
-#
-#small = resize_img(img, 0.7)
-#print(small.shape)
-#
-#cv2.imwrite(r"C:\Users\YasmineMnb\Desktop\Roni_new\python scripts\testing env\tracking\examples\select_ROI_exmp.png", small)
+def rename_folder_content(folder_path, start_num, out_path = None, name_format = "DSC_"):
+    padding_num = 4
+    ## get list of file names in the folder
+    pic_lst  = os.listdir(folder_path)
+    ## loop through said list
+    cnt = start_num
+    for i in range(len(pic_lst)):
+        zero_padded_num = str(cnt).zfill(padding_num)
+        new_f_name = name_format  + zero_padded_num + "." + pic_lst[i].split(".")[-1]
 
-#%%
+        ## if out_path was specified - move the file there with the new name
+        if not out_path:
+            out_path = folder_path
 
-    in_path = r"C:\Users\YasmineMnb\Downloads\cam_20191016_091846\var\www\html\media"
+        new_path = out_path + "\\" + new_f_name
+        origin_path = folder_path + "\\" + pic_lst[i]
+#            print(origin_path+"\n"+new_path)
+        try:
+            os.rename(origin_path, new_path)
+        except FileExistsError:
+            if cnt == start_num:
+                print("File Exists Error\nsaving with extra zero padding")
+            padding_num = 5
+            zero_padded_num = str(cnt).zfill(5)
+            new_f_name = name_format + zero_padded_num + "." + pic_lst[i].split(".")[-1]
+            new_path = folder_path + "\\" + new_f_name
+            os.rename(origin_path, new_path)
+        cnt += 1
 
-    img_1 = r"C:\Users\YasmineMnb\Desktop\camjunk\1.JPG"
-    img_2 = r"C:\Users\YasmineMnb\Desktop\camjunk\2.JPG"
-
-    im = os.listdir(in_path)[0]
-    img = in_path + "\\" + im
-    img_1 = cv2.imread(img_1)
-    img_2 = cv2.imread(img_2)
-    #%%
-    img = rotate_img(img, 270)
-    cv2.namedWindow("img", cv2.WINDOW_NORMAL)
-    cv2.imshow("img", img)
-#%%
-    cv2.namedWindow("img1", cv2.WINDOW_NORMAL)
-    cv2.imshow("img1", img_1)
-    cv2.namedWindow("img2", cv2.WINDOW_NORMAL)
-    cv2.imshow("img2", img_2)
-
-    both = cv2.add(img_1,img_2)
-    cv2.namedWindow("both", cv2.WINDOW_NORMAL)
-    cv2.imshow("both", both)
 
 # =============================================================================
 # def thresh_per_chanel(img, chan, MIN=0 ,MAX=255, win_name = "chanel"):
@@ -255,10 +264,6 @@ def resize_img(img, scale_percent):
 #    resized_cropped = cv2.resize(cropped, (width, height))
 #
 #    cv2.imshow('my webcam', resized_cropped)
-#
-#
-#
-#
 #def zoom_out(img):
 #    pass
 # =============================================================================
@@ -314,7 +319,7 @@ def resize_img(img, scale_percent):
 #     return k, i
 #
 #
-# folder_path =  r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_3"
+# folder_path =  r"path"
 # curr_pic = os.listdir(folder_path)[0]
 # video_out = None
 # img = None
@@ -362,32 +367,3 @@ def resize_img(img, scale_percent):
 #
 # show_webcam(mirror=False)
 # =============================================================================
-#%%
-
-    ## renameing files in folder
-
-def rename_folder(folder_path, output_path):
-    #%%
-    pic_lst  = os.listdir(folder_path)
-    for i in range(len(pic_lst)):
-        if len(pic_lst[i])>8:
-            new_name = pic_lst[i].replace("0","",1)
-        else:
-            new_name = pic_lst[i]
-        src = folder_path + "\\" +  pic_lst[i]
-        dst = output_path + "\\" +  new_name
-
-#        print(src,"\n", dst)
-        shutil.copy(src,dst)
-
-    #%%
-    folder_path = r"C:\Users\YasmineMnb\Desktop\camjunk\webcam"
-    output_path = r"C:\Users\YasmineMnb\Desktop\camjunk\webcam_new"
-    rename_folder(folder_path)
-
-
-
-
-
-
-
