@@ -146,7 +146,7 @@ def draw_bounding_box(frame, boxes, tracker_ok, timer, #ground_truth_bbox,
         for line in tracker_hist_data:
             num = int(line.split(",")[-2])
             col_tup = (0, 100*num, 255-10*num)
-            ## need to change this to regex!
+            ## need to change this to regex! - currently won't work if not under C directory...
             dots = (line.split(", C")[0]).split(", ")
             dots = list(map(float, dots))
             x = (int(dots[0] + dots[2]/2))
