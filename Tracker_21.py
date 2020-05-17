@@ -146,6 +146,7 @@ def draw_bounding_box(frame, boxes, tracker_ok, timer, #ground_truth_bbox,
         for line in tracker_hist_data:
             num = int(line.split(",")[-2])
             col_tup = (0, 100*num, 255-10*num)
+            ## need to change this to regex!
             dots = (line.split(", C")[0]).split(", ")
             dots = list(map(float, dots))
             x = (int(dots[0] + dots[2]/2))
@@ -300,10 +301,12 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
         except KeyboardInterrupt:
             print("\nCaught Keyboard Interrupt")
             print(i_frame)
+            k =27
             break
 
-        except ValueError:
-            break
+#        except ValueError:
+#            print("asd")
+#            break
     return i_frame, k
 
 # Run tracker according to tracking params. Display result on images
@@ -442,7 +445,7 @@ def main():
     tracker_type_list = ['CSRT']#, 'KCF']#, 'TLD', 'MEDIANFLOW','MIL', 'MOSSE']
 
     # path with videos or files
-    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\pics_feb\1\side_croped_1"
+    video_or_folder_name =  r"\\spock\roni\set_up_2.1\test without measured light\119D3400"
     output_path = r"Tracked_1_angle" # only LOCAL file name! not full path
     object_name = '' #tip name
 

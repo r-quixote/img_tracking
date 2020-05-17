@@ -59,6 +59,7 @@ This was written to be used with an open terminal/from within spyder
 	- [ ] add file dialog for im2vid_v2.py
 - [ ] file name indepence (trial with imgs from PI/webcam/other name format)
 	- [ ] figure out filename independent way to find timestamp
+	- [ ] change file oparations to using regex (!)
 
 
 **2DO - not really important:**
