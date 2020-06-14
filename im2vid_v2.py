@@ -73,7 +73,8 @@ def create_video(input_folder_path, outvid_path, fps):
 #     size = ((img0.shape[1]), (img0.shape[0]))
 #     size = (640,480)
 # =============================================================================
-    size = (1280,720)
+    size = (1980,1080)
+    size = (1080,720)
 
     ## set params for the vid_output
     is_color = True
@@ -90,6 +91,7 @@ def create_video(input_folder_path, outvid_path, fps):
         for i in range(0, int(len(imgs_lst))):
             image_file = input_folder_path +"\\"+ imgs_lst[i]
             img = cv2.imread(image_file)
+#            print(img.shape)
             if type(img) != np.ndarray: ## just trying to catch common errors
                 break
 # ========== if anything should be done with img enter code here ==============
@@ -100,11 +102,12 @@ def create_video(input_folder_path, outvid_path, fps):
 #            img = np.concatenate((img, dots_img), axis=1) ## add next to each other
 #
 #            size = (int(img.shape[1]/4), int(img.shape[0]/4))
-#            size = (1500,1080)      ##(3145, 1016)
+            size = (1080,720)      ##(3145, 1016)
 #            print(size[0], size[1])
 #            print(size[0]/size[1])
 #            break
             img = cv2.resize(img, size)
+#            img = cv2.fastNlMeansDenoisingColored(img, None, 15, 10, 7, 21)
             img_procesing.text_on_img(img, img_procesing.get_time(image_file)) ## add time stamp
 #
 # =============================================================================
@@ -156,14 +159,14 @@ def create_gif(input_folder_path, output_path):
                       append_images=frames[1:500], save_all=True, duration=40, loop=0)
 
 def main():
-    input_folder_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_5"
-    outvid_path = r"C:\Users\YasmineMnb\Desktop\fluo playing\9\side_croped_5.avi"
+    input_folder_path = r"C:\Users\YasmineMnb\Desktop\garbege testing cam"
+    outvid_path = r"C:\Users\YasmineMnb\Desktop\garbege testing cam.avi"
 
 #    in_path = GUI.filedialog_loop("choose input folder")
 #    out_path = GUI.filedialog_loop("choose output folder \n(file will be saved with same name as inputfolder)")
 
 
-    create_video(input_folder_path, outvid_path, 12.0)
+    create_video(input_folder_path, outvid_path, 6.0)
 #    create_gif(input_folder_path,outvid_path.replace(".avi", ".gif"))
 
 if __name__ == '__main__':

@@ -25,7 +25,7 @@ This was written to be used with an open terminal/from within spyder
 <img src="examples/select_ROI_exmp.png" alt="tip_with_track" width="450" height="350">
 
 4. you can use `q` or `ESC` on keyboard to stop.
-5. let the magic happen... TADA!
+5. wait untill... TADA!
 
 #### How to use im2vid_v2.py:
 1.
@@ -53,6 +53,7 @@ This was written to be used with an open terminal/from within spyder
 - [X] ~~add tracking for second point in order to track angle between 2 points~~
 - [ ] can't go to manual when tracking multiple points
 	(in general manual still needs all sorts of work...)
+	- [ ] show previous dots while in manual
 - [ ] add run from terminal
 	- [ ] finish more robust file dialog for cropping.py
 	- [ ] add file dialog for tracker_21.py

@@ -113,6 +113,8 @@ def get_time(file_path):
 def get_time_delta(str_img_time, cur_img_time):
     """converts both to time since epoch and the converts back to string in 00:00 H form"""
     # convert start
+    if str_img_time == "path time not found":
+        return "time_error"
     start_time = time.strptime(str_img_time+" -2000", '%d-%m %H:%M -%Y') # year added cause default dosn't work
     epoch_start = time.mktime(start_time)
 
@@ -177,7 +179,7 @@ def resize_img(img, scale_percent):
         height = int(img.shape[0] * scale_percent)
     dim = (width, height)
     # resize image
-    resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+    resized = cv2.resize(img, dim)
     return resized
 
 def copy_folder_content(in_path, out_path):
@@ -221,8 +223,27 @@ def rename_folder_content(folder_path, start_num, out_path = None, name_format =
             new_path = folder_path + "\\" + new_f_name
             os.rename(origin_path, new_path)
         cnt += 1
-
-
+#%%
+def find_denoise_IR(img):
+#%%
+    size = (1280,720)
+    img = cv2.resize(img, size)
+    ## show the original img
+    cv2.namedWindow("original", cv2.WINDOW_NORMAL)
+    cv2.imshow("original", img)
+    cv2.waitKey(1)
+    for i in range(2,21,5):
+        dst = cv2.fastNlMeansDenoisingColored(img, None, i, 10, 7, 21)
+        win_name = "win_"+str(i)
+        cv2.namedWindow(win_name, cv2.WINDOW_NORMAL)
+        cv2.imshow(win_name, dst)
+        cv2.waitKey(1)
+#        cv2.namedWindow("canging", cv2.WINDOW_NORMAL)
+        cv2.imshow("canging", dst)
+        cv2.waitKey(1)
+        print(i)
+#%%
+img = cv2.imread(r"C:\Users\YasmineMnb\Desktop\june exp\200605_flash\original\DSC_0002.JPG")
 # =============================================================================
 # def thresh_per_chanel(img, chan, MIN=0 ,MAX=255, win_name = "chanel"):
 #     """try thresholding per RGB chanel"""

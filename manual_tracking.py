@@ -97,7 +97,7 @@ def save_added_points(points_dct, points_file, folder_path):
             box_x = point[0]-box_size/2
             box_y = point[1]-box_size/2
             img_time = img_procesing.get_time(full_img_path)
-            line = ', '.join(map(str, [box_x, box_y, box_size, box_size, full_img_path, img_time, "Manual"]))
+            line = ', '.join(map(str, [box_x, box_y, box_size, box_size, full_img_path, img_time, -1, "Manual"]))
             with open(points_file, "a") as out_file:
                 out_file.write(line)
                 out_file.write("\n")

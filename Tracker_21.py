@@ -187,18 +187,18 @@ def load_image_from_file_or_video(run_images_from_folder, video_files, frame_num
     if run_images_from_folder:
         if frame_number >= len(video_files):
             ok = False
-            return ok, []
+            return ok, [], filename
         filename = video_files[frame_number]
         # video_folder + str(frame_number) + ".jpg"
         if not os.path.isfile(filename):
             print('file not found: ' + filename)
             ok = False
-            return ok, []
+            return ok, [], filename
         frame = cv2.imread(filename, cv2.IMREAD_COLOR)
         if frame is None:
             print('file not found: ' + filename)
             ok = False
-            return ok, []
+            return ok, [], filename
         ok = True
 
     else:
@@ -207,14 +207,12 @@ def load_image_from_file_or_video(run_images_from_folder, video_files, frame_num
         if not ok:
             print('Cannot read video file')
             sys.exit()
-
-    file_name = filename.split(r"6\DSC_")[-1]
-    return ok, frame, file_name
+    return ok, frame, filename
 
 
 ## Return initial bounding box from selection
-def get_initial_bounding_box(frame):
-    # origin that works!:
+def get_initial_bounding_boxs(frame):
+    # origin that works for single tracker!:
 #    cv2.namedWindow("SELECT ROI", cv2.WINDOW_NORMAL)
 #    bbox = cv2.selectROI("SELECT ROI", frame, True)
 #    return bbox
@@ -372,8 +370,7 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder,
 #         height_frame = shape_frame[0]
 # =============================================================================
     # Get initial bounding box from user input
-#    bbox_init = get_initial_bounding_box(frame)
-    init_bboxs = get_initial_bounding_box(frame)
+    init_bboxs = get_initial_bounding_boxs(frame)
     cv2.destroyAllWindows()
     # Initialize MultiTracker
     for tracker_type in tracker_types:
@@ -381,7 +378,9 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder,
             print(tracker_type)
             multi_tracker.add(create_tracker(tracker_type), frame, bbox)
 
-#    colors = get_box_colors()  # get colors to display on screen
+
+    # Get colors to display on screen
+#    colors = get_box_colors()
 
     # set video output for saving
     video_out = create_video_results(video_or_folder_name, frame,   object_name, output_path)
@@ -419,12 +418,16 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder,
                                                       video_files, i_frame,
                                                       video)
                 # Get initial bounding box from user input
-                bbox_init = get_initial_bounding_box(frame)
+                init_bboxs = get_initial_bounding_boxs(frame)
                 cv2.destroyAllWindows()
-                # Initialize MultiTracker
+                print(init_bboxs)
+                # Re-Initialize MultiTracker
                 for tracker_type in tracker_types:
-                    multi_tracker.add(create_tracker(tracker_type), frame, bbox_init)
-                path_tracker_rois = save_result_rois(video_or_folder_name, [], bbox_init,
+                    for bbox in init_bboxs:
+                        print(tracker_type)
+                        multi_tracker.add(create_tracker(tracker_type), frame, bbox)
+
+                path_tracker_rois = save_result_rois(video_or_folder_name, [], init_bboxs,
                                                      tracker_types, True,   object_name,
                                                      f_name, output_path, first_tiral = False)
 
@@ -445,8 +448,8 @@ def main():
     tracker_type_list = ['CSRT']#, 'KCF']#, 'TLD', 'MEDIANFLOW','MIL', 'MOSSE']
 
     # path with videos or files
-    video_or_folder_name =  r"\\spock\roni\set_up_2.1\test without measured light\119D3400"
-    output_path = r"Tracked_1_angle" # only LOCAL file name! not full path
+    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\june exp\200601_contin\120D3400_croped2"
+    output_path = r"Tracked_croped" # only LOCAL file name! not full path
     object_name = '' #tip name
 
     outfolder = os.path.dirname(video_or_folder_name) + "\\" + output_path

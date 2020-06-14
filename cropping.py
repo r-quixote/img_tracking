@@ -97,8 +97,8 @@ def creat_folder(out_path):
         return out_path
 
 def main():
-    in_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\2\side"
-    out_path = r"C:\Users\YasmineMnb\Desktop\pics_feb\2\side_croped_1"
+    in_path = r"C:\Users\YasmineMnb\Desktop\june exp\120D3400"
+    out_path = r"C:\Users\YasmineMnb\Desktop\june exp\120D3400_croped2"
 
 #    in_path = GUI.filedialog_loop("choose input folder")
 #    out_path = GUI.filedialog_loop("choose output folder \n(where to save to?)")
@@ -115,8 +115,6 @@ def main():
     if len(os.listdir(out_path))>0:
         print("there are other imgs there!")
 
-
-
     ## showing last pic of folder
     last_pic_name_path = in_path + "\\" + pic_lst[-1]
     last_img = cv2.imread(last_pic_name_path)
@@ -129,8 +127,8 @@ def main():
 
     ## click and drag to select region of interest (ROI)
     ROI = get_ROI(last_img)
-    cv2.destroyAllWindows()
-    print(ROI)
+#    print(ROI)
+
     ## if selection was canceled (ESC) ROI has dimension of 0
     if (ROI[2] or ROI[3]) == 0:
         print("\n###############\
@@ -140,5 +138,6 @@ def main():
         print("\nnow croping :)")
         crop_all(ROI[0], ROI[1], ROI[3], ROI[2], in_path, out_path, pic_lst)
 
+    cv2.destroyAllWindows()
 if __name__ == "__main__":
     main()
