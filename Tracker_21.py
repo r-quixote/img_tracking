@@ -187,7 +187,7 @@ def load_image_from_file_or_video(run_images_from_folder, video_files, frame_num
     if run_images_from_folder:
         if frame_number >= len(video_files):
             ok = False
-            return ok, [], filename
+            return ok, [], None
         filename = video_files[frame_number]
         # video_folder + str(frame_number) + ".jpg"
         if not os.path.isfile(filename):
@@ -248,9 +248,12 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
     while True:
         try:
             ok, frame, f_name = load_image_from_file_or_video(run_images_from_folder, video_files, i_frame, video)
+            # If the ok came back False, we didn't load an img
+            if not ok:
+                k = 27
+                break
             # Start timer
             timer = cv2.getTickCount()
-
             # get updated location of objects in subsequent frames
             # start_time = time.time()  # start time of the loop
             ok, boxes = multi_tracker.update(frame)
@@ -299,7 +302,7 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
         except KeyboardInterrupt:
             print("\nCaught Keyboard Interrupt")
             print(i_frame)
-            k =27
+            k = 27
             break
 
 #        except ValueError:

@@ -64,9 +64,9 @@ This was written to be used with an open terminal/from within spyder
 
 
 **2DO - not really important:**
-- [X] add timestamp to crop last img
-- [X] in tracker change color of second tracked point in output video
-- [X] add time delta to img_procesing
+- [X] ~~add timestamp to crop last img~~
+- [X] ~~in tracker change color of second tracked point in output video~~
+- [X] ~~add time delta to img_procesing~~
 - [ ] add brightness controll to img_procesing.py - maybe auto brightness correction for imgs with natural lighting
 - [ ] clean up progress bar mess
 - [ ] add help section for img_procesing

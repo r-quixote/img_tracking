@@ -91,18 +91,18 @@ def get_orig_path(file_path):
         traceback.print_tb(err.__traceback__)
         print(err)
         print("check the names of the folders")
-        return "EEROR"
+        return "ERROR"
     except FileNotFoundError as err:
         traceback.print_tb(err.__traceback__)
         print(err)
         print("check the names of the folders")
-        return "EEROR"
+        return "ERROR"
     return full_or_file_path
 
 def get_time(file_path):
     if "CROPED" in file_path:
         file_path = get_orig_path(file_path)
-        if file_path == "EEROR":
+        if file_path == "ERROR":
             return("path time not found")
 
     if not os.path.isfile(file_path):
