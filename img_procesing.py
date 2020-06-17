@@ -17,6 +17,28 @@ def get_ROI(img):
     cv2.destroyWindow("SELECT ROI")
     return bbox
 
+def get_multiple_ROIs(frame):
+    """allows choosing multiple 'Regeions Of Interest' and returns them as list"""
+
+    ## Creat a copy of the frame to show selected boxes
+    show_selected_frame = frame.copy()
+
+    ## init an empty list for the ROIs
+    bboxs = []
+    while True:
+        cv2.namedWindow("SELECT ROI", cv2.WINDOW_NORMAL)
+        bbox = cv2.selectROI("SELECT ROI", show_selected_frame, showCrosshair=True)
+        if bbox == (0, 0, 0, 0):
+            break
+        bboxs.append(bbox)
+        # drawing the selected boxes on the copy:
+        for bbox in bboxs:
+            show_selected_frame = cv2.rectangle(show_selected_frame, (bbox[0], bbox[1]), (bbox[0]+bbox[2],bbox[1]+ bbox[3]),
+                                                (50, 50, 200) , 2)
+            show_selected_frame = cv2.line(show_selected_frame, (bbox[0]+int(bbox[2]/2), bbox[1]), (bbox[0]+int(bbox[2]/2), bbox[1]+ bbox[3]),(50, 50, 200),2)
+            show_selected_frame = cv2.line(show_selected_frame, (bbox[0], bbox[1]+int(bbox[3]/2)), (bbox[0]+bbox[2], bbox[1]+int(bbox[3]/2)),(50, 50, 200),2)
+    return bboxs
+
 def crop(img, x, y, h, w, name):
     """
     shows the croped version of img, and returns it

@@ -212,18 +212,13 @@ def load_image_from_file_or_video(run_images_from_folder, video_files, frame_num
 
 ## Return initial bounding box from selection
 def get_initial_bounding_boxs(frame):
-    # origin that works for single tracker!:
-#    cv2.namedWindow("SELECT ROI", cv2.WINDOW_NORMAL)
-#    bbox = cv2.selectROI("SELECT ROI", frame, True)
-#    return bbox
-
-    # muliple trackers:
-    # creat a copy of the frame to show selected boxes
+    ## Muliple trackers:
+    ## Creat a copy of the frame to show selected boxes
     show_selected_frame = frame.copy()
     bboxs = []
     while True:
         cv2.namedWindow("SELECT ROI", cv2.WINDOW_NORMAL)
-        bbox = cv2.selectROI("SELECT ROI", show_selected_frame, showCrosshair=True, fromCenter=False)
+        bbox = cv2.selectROI("SELECT ROI", show_selected_frame, showCrosshair=True)
         if bbox == (0, 0, 0, 0):
             break
         bboxs.append(bbox)
@@ -233,6 +228,10 @@ def get_initial_bounding_boxs(frame):
                                                 (50, 50, 200) , 2)
             show_selected_frame = cv2.line(show_selected_frame, (bbox[0]+int(bbox[2]/2), bbox[1]), (bbox[0]+int(bbox[2]/2), bbox[1]+ bbox[3]),(50, 50, 200),2)
             show_selected_frame = cv2.line(show_selected_frame, (bbox[0], bbox[1]+int(bbox[3]/2)), (bbox[0]+bbox[2], bbox[1]+int(bbox[3]/2)),(50, 50, 200),2)
+    ## Origin that worked for single tracker!:
+#    cv2.namedWindow("SELECT ROI", cv2.WINDOW_NORMAL)
+#    bbox = cv2.selectROI("SELECT ROI", frame, True)
+#    return bbox
     return bboxs
 
 def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
@@ -451,9 +450,9 @@ def main():
     tracker_type_list = ['CSRT']#, 'KCF']#, 'TLD', 'MEDIANFLOW','MIL', 'MOSSE']
 
     # path with videos or files
-    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\june exp\200601_contin\120D3400_croped2"
-    output_path = r"Tracked_croped" # only LOCAL file name! not full path
-    object_name = '' #tip name
+    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\june exp\200616_contin\1(L)\Croped_1"
+    output_path = r"Tracked_croped_1" # only LOCAL file name! not full path
+    object_name = '' # tip name
 
     outfolder = os.path.dirname(video_or_folder_name) + "\\" + output_path
 

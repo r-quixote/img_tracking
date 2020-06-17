@@ -19,32 +19,32 @@ def crop(img, x, y, h, w, name):
 #    cv2.waitKey(1)
     return crop_img
 
-def crop_all(x,y,h,w, in_path, out_path, pic_lst):
+def crop_all(x,y,h,w, in_path, out_path):
     """
     crop the entire list of pictures
     pic_list shoud be a list of the names of the files
     """
     cv2.namedWindow("croping", cv2.WINDOW_NORMAL)
-
-    ## see how long this takes
+    pic_lst  = os.listdir(in_path)
+    ## See how long this takes
     t = time.perf_counter()
 
     for i in range(len(pic_lst)):
         pic_name = pic_lst[i]
         img = in_path + "\\" + pic_lst[i]
-        new_pic_name = out_path +"\\" + pic_name.split(".")[0].strip("DSC_")+"_CROPED.jpg"
+        new_pic_name = out_path + "\\" + pic_name.split(".")[0].strip("DSC_")+"_CROPED.jpg"
 
-        ## progress bar
+        ## Progress bar
         perc = (i/len(pic_lst))
         progress_bar.update_progress_bar(perc)
 
-        ## load img
+        ## Load img
         frame = cv2.imread(img)
-        ## actual croping
+        ## Actual croping
         croped = crop(frame, x,y,h,w, "croping")
 
-# ========= if anything should be done with imgs enter code here ===============
-#         rtd = img_procesing.rotate_img(croped,180) ## for instance rotation
+# ========= if anything should be done with imgs enter code here ==============
+#         rtd = img_procesing.rotate_img(croped,180)
 # =============================================================================
 
         cv2.imshow("croping", croped)
@@ -54,7 +54,7 @@ def crop_all(x,y,h,w, in_path, out_path, pic_lst):
             break
         cv2.imwrite(new_pic_name,croped)
 
-    ## progress bar again...
+    ## Progress bar again...
     if k != 27 and k != ord('q'):
         progress_bar.update_progress_bar(1)
         print("\n\nfinished in {} seconds".format(round(time.perf_counter() - t,2)))
@@ -111,14 +111,14 @@ def main():
         print("\n\nHEY!\n you didn't take all the pictures\n\n")
 
     out_path = creat_folder(out_path)
-
     if len(os.listdir(out_path))>0:
         print("there are other imgs there!")
 
-    ## showing last pic of folder
+    ## Showing last image of the in_path folder
     last_pic_name_path = in_path + "\\" + pic_lst[-1]
     last_img = cv2.imread(last_pic_name_path)
-    ## add timestamp to img
+
+    ## Add timestamp to img
     first_img_file_time = img_procesing.get_time(in_path + "\\" + pic_lst[0])
     last_img_file_time = img_procesing.get_time(last_pic_name_path)
     text = "First frame time: {}\nLast frame time: {}".format(first_img_file_time,
@@ -136,8 +136,40 @@ def main():
               ###############")
     else:
         print("\nnow croping :)")
-        crop_all(ROI[0], ROI[1], ROI[3], ROI[2], in_path, out_path, pic_lst)
+        crop_all(ROI[0], ROI[1], ROI[3], ROI[2], in_path, out_path)
 
     cv2.destroyAllWindows()
+
+def new_main():
+    ## Chosse folder to crop
+#    in_path = GUI.filedialog_loop("choose input folder")
+    in_path = r"C:\Users\YasmineMnb\Desktop\june exp\200616_contin\1(L)\origin"
+    pic_lst  = os.listdir(in_path)
+
+    ## Showing last image of the in_path folder
+    last_pic_name_path = in_path + "\\" + pic_lst[-1]
+    last_img = cv2.imread(last_pic_name_path)
+
+    ## Add timestamp to last_img
+    first_img_file_time = img_procesing.get_time(in_path + "\\" + pic_lst[0])
+    last_img_file_time = img_procesing.get_time(last_pic_name_path)
+    text = "First frame time: {}\nLast frame time: {}".format(first_img_file_time,
+                                                              last_img_file_time)
+    last_img_file_time = img_procesing.text_on_img(last_img, text)
+
+    ## Select all ROIs (in roni exp from left to tright)
+    ROIs = img_procesing.get_multiple_ROIs(last_img)
+
+    ## Creating folders for every roi, and saveing croped imgs there
+    parent_folder = in_path.rsplit("\\",1)[-2]
+    for i, ROI in enumerate(ROIs):
+        print("\nnow croping ROI: " + str(i))
+        out_path = parent_folder + "\\Croped_" + str(i+1)
+        creat_folder(out_path)
+        crop_all(ROI[0], ROI[1], ROI[3], ROI[2], in_path, out_path)
+
 if __name__ == "__main__":
-    main()
+    try:
+        new_main()
+    finally:
+        cv2.destroyAllWindows()

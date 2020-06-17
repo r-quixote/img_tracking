@@ -159,8 +159,8 @@ def create_gif(input_folder_path, output_path):
                       append_images=frames[1:500], save_all=True, duration=40, loop=0)
 
 def main():
-    input_folder_path = r"C:\Users\YasmineMnb\Desktop\garbege testing cam"
-    outvid_path = r"C:\Users\YasmineMnb\Desktop\garbege testing cam.avi"
+    input_folder_path = r"C:\Users\YasmineMnb\Desktop\june exp\200616_contin\2(R)\origin"
+    outvid_path = r"C:\Users\YasmineMnb\Desktop\june exp\200616_contin\2(R)\origin.avi"
 
 #    in_path = GUI.filedialog_loop("choose input folder")
 #    out_path = GUI.filedialog_loop("choose output folder \n(file will be saved with same name as inputfolder)")

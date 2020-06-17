@@ -51,8 +51,8 @@ This was written to be used with an open terminal/from within spyder
 ------------
 **2DO:**
 - [X] ~~add tracking for second point in order to track angle between 2 points~~
-- [ ] can't go to manual when tracking multiple points
-	(in general manual still needs all sorts of work...)
+- [ ] manual still needs all sorts of work...
+    - [X] ~~can't go to manual when tracking multiple points~~
 	- [ ] show previous dots while in manual
 - [ ] add run from terminal
 	- [ ] finish more robust file dialog for cropping.py
@@ -70,7 +70,9 @@ This was written to be used with an open terminal/from within spyder
 - [ ] add brightness controll to img_procesing.py - maybe auto brightness correction for imgs with natural lighting
 - [ ] clean up progress bar mess
 - [ ] add help section for img_procesing
-- [ ] add cropping several parts to cropping.py
+- [ ] cropping several parts in cropping.py
+    - [X] cropping several parts
+    - [ ] uneficient! should only open every img once - currently opens as many times as there are ROIs
 
 
 
