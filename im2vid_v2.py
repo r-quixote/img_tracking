@@ -103,6 +103,7 @@ def create_video(input_folder_path, outvid_path, fps):
 #
 #            size = (int(img.shape[1]/4), int(img.shape[0]/4))
             size = (1080,720)      ##(3145, 1016)
+#            flipHorizontal = cv2.flip(originalImage, 1) ## ??
 #            print(size[0], size[1])
 #            print(size[0]/size[1])
 #            break
@@ -159,8 +160,8 @@ def create_gif(input_folder_path, output_path):
                       append_images=frames[1:500], save_all=True, duration=40, loop=0)
 
 def main():
-    input_folder_path = r"C:\Users\YasmineMnb\Desktop\june exp\200616_contin\2(R)\origin"
-    outvid_path = r"C:\Users\YasmineMnb\Desktop\june exp\200616_contin\2(R)\origin.avi"
+    input_folder_path = r"C:\Users\YasmineMnb\Desktop\june exp\200617_contin\1(L)\origin"
+    outvid_path = r"C:\Users\YasmineMnb\Desktop\june exp\200617_contin\1(L)\origin.avi"
 
 #    in_path = GUI.filedialog_loop("choose input folder")
 #    out_path = GUI.filedialog_loop("choose output folder \n(file will be saved with same name as inputfolder)")

@@ -450,14 +450,14 @@ def main():
     tracker_type_list = ['CSRT']#, 'KCF']#, 'TLD', 'MEDIANFLOW','MIL', 'MOSSE']
 
     # path with videos or files
-    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\june exp\200616_contin\1(L)\Croped_1"
-    output_path = r"Tracked_croped_1" # only LOCAL file name! not full path
+    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\Lineup_10062020_Web2_left_cropped"
+    output_path = r"Tracked" # only LOCAL file name! not full path
     object_name = '' # tip name
 
     outfolder = os.path.dirname(video_or_folder_name) + "\\" + output_path
 
     if os.path.isdir(outfolder):
-        print("that folder already exists! are you sure you want to continue?")
+        print("that folder alrea dy exists! are you sure you want to continue?")
         ans = input("y/n? ")
         if ans == "n":
             sys.exit()

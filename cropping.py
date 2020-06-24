@@ -6,76 +6,61 @@ import progress_bar
 import img_procesing
 from GUI import GUI
 
+def multi_crop_img_lst(ROIs, out_paths, in_path):
+    """
+    crop all ROIs out of entire list of pictures in the in_path folder
+    save them to the out_paths list
+    """
+    pic_lst = [os.path.join(in_path, f_name) for f_name in os.listdir(in_path)]
 
-def crop(img, x, y, h, w, name):
-    """
-    shows the croped version of img, and returns it
-    img - the image that you want to crop
-    name - the window name
-    """
-    crop_img = img[y:y+h, x:x+w]
-#    cv2.namedWindow(name, cv2.WINDOW_NORMAL)
-#    cv2.imshow(name, crop_img)
-#    cv2.waitKey(1)
-    return crop_img
-
-def crop_all(x,y,h,w, in_path, out_path):
-    """
-    crop the entire list of pictures
-    pic_list shoud be a list of the names of the files
-    """
-    cv2.namedWindow("croping", cv2.WINDOW_NORMAL)
-    pic_lst  = os.listdir(in_path)
-    ## See how long this takes
+    ## Track how long this takes
     t = time.perf_counter()
 
-    for i in range(len(pic_lst)):
-        pic_name = pic_lst[i]
-        img = in_path + "\\" + pic_lst[i]
-        new_pic_name = out_path + "\\" + pic_name.split(".")[0].strip("DSC_")+"_CROPED.jpg"
+    for i, full_pic_path in enumerate(pic_lst):
+        ## Create new file name for the croped img
+        pic_name = full_pic_path.rsplit("\\", 1)[-1]
+        new_pic_name = pic_name.strip(".JPG").strip("DSC_")+"_CROPED.jpg"
 
         ## Progress bar
         perc = (i/len(pic_lst))
         progress_bar.update_progress_bar(perc)
 
         ## Load img
-        frame = cv2.imread(img)
-        ## Actual croping
-        croped = crop(frame, x,y,h,w, "croping")
+        img = cv2.imread(full_pic_path)
+
+        ## Loop over selected ROIs
+        for j, ROI in enumerate(ROIs):
+            ## Crope the img
+            x, y, w, h = ROI[0], ROI[1], ROI[2], ROI[3]
+            croped_img = img[y:y+h, x:x+w]
 
 # ========= if anything should be done with imgs enter code here ==============
-#         rtd = img_procesing.rotate_img(croped,180)
+#            rtd = img_procesing.rotate_img(croped_img,180)
 # =============================================================================
 
-        cv2.imshow("croping", croped)
-        k = cv2.waitKey(1) & 0xff
-        if k == 27 or k == ord('q'): # Esc/q key to stop
+            ## create window for every ROI
+            cv2.namedWindow("croping_" + str(ROI), cv2.WINDOW_NORMAL)
+            cv2.imshow("croping_" + str(ROI), croped_img)
+
+            ## Press Esc OR q key to stop
+            k = cv2.waitKey(1) & 0xff
+            if k == 27 or k == ord('q'):
+                break
+
+            ## Save the img to file
+            out_path = out_paths[j] + "\\" + new_pic_name
+            cv2.imwrite(out_path, croped_img)
+
+        ## If we broke off we should stop this loop as well
+        if k == 27 or k == ord('q'):
             print("\n\n!!! You Stoped !!!")
             break
-        cv2.imwrite(new_pic_name,croped)
 
-    ## Progress bar again...
+    ## Progress bar to finih...
     if k != 27 and k != ord('q'):
         progress_bar.update_progress_bar(1)
         print("\n\nfinished in {} seconds".format(round(time.perf_counter() - t,2)))
 
-def get_ROI(img):
-    """
-    returns the bounding box of selected area.
-    x = bbox[0]
-    y = bbox[1]
-    w = bbox[2]
-    h = bbox[3]
-    use `space` or `enter` to confirm selection
-    use   `c`   or  `Esc`  to cancel selection (function will return zero by zero)
-    """
-    cv2.namedWindow("SELECT ROI", cv2.WINDOW_NORMAL)
-    cv2.waitKey(1)
-    print("\nuse `space` or `enter` to confirm selection")
-    print("use `c`     or `Esc`   to cancel selection (function will return [0,0])")
-    bbox = cv2.selectROI("SELECT ROI", img, True)
-    cv2.destroyWindow("SELECT ROI")
-    return bbox
 
 def creat_folder(out_path):
     """
@@ -84,8 +69,8 @@ def creat_folder(out_path):
     if not:    it will create the directory
     """
     if os.path.isdir(out_path):
-        ans = input("HEY! output folder already exists. \
-                    to change it pleas enter new name now")
+        ans = input("\nHEY!\n output folder already exists.\n \
+                    to change it pleas enter new name now\n\n")
         if ans == "":
             print("OK then")
             return out_path
@@ -96,80 +81,43 @@ def creat_folder(out_path):
         os.mkdir(out_path)
         return out_path
 
+
 def main():
-    in_path = r"C:\Users\YasmineMnb\Desktop\june exp\120D3400"
-    out_path = r"C:\Users\YasmineMnb\Desktop\june exp\120D3400_croped2"
-
-#    in_path = GUI.filedialog_loop("choose input folder")
-#    out_path = GUI.filedialog_loop("choose output folder \n(where to save to?)")
-
-    pic_lst  = os.listdir(in_path)
-    #pic_lst = pic_lst[:476]   ## for spesific stop...
-    ## in case i forget to turn back to all pics:
-
-    if len(pic_lst) != len(os.listdir(in_path)):
-        print("\n\nHEY!\n you didn't take all the pictures\n\n")
-
-    out_path = creat_folder(out_path)
-    if len(os.listdir(out_path))>0:
-        print("there are other imgs there!")
-
-    ## Showing last image of the in_path folder
-    last_pic_name_path = in_path + "\\" + pic_lst[-1]
-    last_img = cv2.imread(last_pic_name_path)
-
-    ## Add timestamp to img
-    first_img_file_time = img_procesing.get_time(in_path + "\\" + pic_lst[0])
-    last_img_file_time = img_procesing.get_time(last_pic_name_path)
-    text = "First frame time: {}\nLast frame time: {}".format(first_img_file_time,
-                                                              last_img_file_time)
-    last_img_file_time = img_procesing.text_on_img(last_img, text)
-
-    ## click and drag to select region of interest (ROI)
-    ROI = get_ROI(last_img)
-#    print(ROI)
-
-    ## if selection was canceled (ESC) ROI has dimension of 0
-    if (ROI[2] or ROI[3]) == 0:
-        print("\n###############\
-              you canceled...\
-              ###############")
-    else:
-        print("\nnow croping :)")
-        crop_all(ROI[0], ROI[1], ROI[3], ROI[2], in_path, out_path)
-
-    cv2.destroyAllWindows()
-
-def new_main():
     ## Chosse folder to crop
 #    in_path = GUI.filedialog_loop("choose input folder")
-    in_path = r"C:\Users\YasmineMnb\Desktop\june exp\200616_contin\1(L)\origin"
-    pic_lst  = os.listdir(in_path)
+    in_path = r"C:\Users\YasmineMnb\Desktop\june exp\test\origin"
+    pic_lst = [os.path.join(in_path, f_name) for f_name in os.listdir(in_path)]
 
     ## Showing last image of the in_path folder
-    last_pic_name_path = in_path + "\\" + pic_lst[-1]
+    last_pic_name_path = pic_lst[-1]
     last_img = cv2.imread(last_pic_name_path)
 
     ## Add timestamp to last_img
-    first_img_file_time = img_procesing.get_time(in_path + "\\" + pic_lst[0])
+    first_img_file_time = img_procesing.get_time(pic_lst[0])
     last_img_file_time = img_procesing.get_time(last_pic_name_path)
-    text = "First frame time: {}\nLast frame time: {}".format(first_img_file_time,
-                                                              last_img_file_time)
+    text = "First frame time: {}\nLast frame time: {}".format(first_img_file_time, last_img_file_time)
     last_img_file_time = img_procesing.text_on_img(last_img, text)
 
     ## Select all ROIs (in roni exp from left to tright)
     ROIs = img_procesing.get_multiple_ROIs(last_img)
 
-    ## Creating folders for every roi, and saveing croped imgs there
-    parent_folder = in_path.rsplit("\\",1)[-2]
-    for i, ROI in enumerate(ROIs):
-        print("\nnow croping ROI: " + str(i))
-        out_path = parent_folder + "\\Croped_" + str(i+1)
-        creat_folder(out_path)
-        crop_all(ROI[0], ROI[1], ROI[3], ROI[2], in_path, out_path)
+    ## If there was nothing selected then don't try to crop
+    if len(ROIs) == 0:
+        print("\n\nyou canceled...\n")
+
+    else:
+        ## Creating folders for every ROI and save them to out_paths list
+        parent_folder = in_path.rsplit("\\",1)[-2]
+        out_paths = []
+        for i in range(len(ROIs)):
+            out_path = parent_folder + "\\Croped_" + str(i+1)
+            out_path = creat_folder(out_path)
+            out_paths.append(out_path)
+
+        multi_crop_img_lst(ROIs, out_paths, in_path)
 
 if __name__ == "__main__":
     try:
-        new_main()
+        main()
     finally:
         cv2.destroyAllWindows()

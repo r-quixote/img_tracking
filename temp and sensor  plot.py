@@ -90,14 +90,26 @@ def convert_to_datetime(arduino_start_time, millis_time_array):
         time_str_arr.append(datetime.datetime.fromtimestamp(time_ep))
     return np.array(time_str_arr)
 #%%
+def load_ophir_log_file(file_path = r"C:\Users\YasmineMnb\Desktop\june exp\ophir_flicker_test\1(L)\200618_ophir_testing_flicker_clean_data.txt"):
+    #%%
+    with open(file_path, "r") as input_file:
+        for line in input_file:
+            line = line.strip()
+            print(line.split("\t"))
+            break
+    #%%
+    file_path = r"C:\Users\YasmineMnb\Desktop\june exp\ophir_flicker_test\1(L)\200618_2_ophir_testing_flicker_clean_data.txt"
+    df = pd.read_csv(file_path, delimiter="\t")
+    plt.plot(df[df.columns[0]], df[df.columns[1]])
 
+#%%
 time_arr, temp, hum = load_simp_file(file_path = r"C:\Users\YasmineMnb\Desktop\logs\temp_log200525-1204.txt")
 arduino_start_time = "20-05-20 09:07"
 dt_time = convert_to_datetime(arduino_start_time, time_arr)
 #%%
-arduino_start_time = "20-06-09 09:40"
+arduino_start_time = "20-06-16 11:28"
 #170520_0857
-file_path = r"C:\Users\YasmineMnb\Desktop\june exp\200610\0906.TXT"
+file_path = r"C:\Users\YasmineMnb\Desktop\june exp\200616_contin\1606.TXT"
 df = load_exp_file(file_path, arduino_start_time)
 
 #%%         ploting

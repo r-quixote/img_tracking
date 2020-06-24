@@ -37,6 +37,8 @@ def get_multiple_ROIs(frame):
                                                 (50, 50, 200) , 2)
             show_selected_frame = cv2.line(show_selected_frame, (bbox[0]+int(bbox[2]/2), bbox[1]), (bbox[0]+int(bbox[2]/2), bbox[1]+ bbox[3]),(50, 50, 200),2)
             show_selected_frame = cv2.line(show_selected_frame, (bbox[0], bbox[1]+int(bbox[3]/2)), (bbox[0]+bbox[2], bbox[1]+int(bbox[3]/2)),(50, 50, 200),2)
+
+    cv2.destroyWindow("SELECT ROI")
     return bboxs
 
 def crop(img, x, y, h, w, name):
