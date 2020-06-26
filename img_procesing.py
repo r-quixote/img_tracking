@@ -106,10 +106,10 @@ def get_orig_path(file_path):
     "...\8\side_croped" AND "...\8\side"
     """
     try:
-        base_folder = file_path.split("_croped")[0]
+        base_folder = file_path.rsplit("\\",2)[0]
         cur_file_name = file_path.rsplit("\\",1)[1]
         file_numb = cur_file_name.split("_")[0]
-        full_or_file_path = base_folder + "\\DSC_"+ file_numb + ".jpg"
+        full_or_file_path = base_folder + "\\origin\\DSC_"+ file_numb + ".jpg"
 
     except IndexError as err:
         traceback.print_tb(err.__traceback__)
@@ -135,7 +135,7 @@ def get_time(file_path):
     return time.strftime('%d-%m %H:%M', time.localtime(STAT[ST_MTIME]))
 
 def get_time_delta(str_img_time, cur_img_time):
-    """converts both to time since epoch and the converts back to string in 00:00 H form"""
+    """converts both to time_since_epoch and the converts back to string in 00:00 H form"""
     # convert start
     if str_img_time == "path time not found":
         return "time_error"
@@ -262,12 +262,12 @@ def find_denoise_IR(img):
         cv2.namedWindow(win_name, cv2.WINDOW_NORMAL)
         cv2.imshow(win_name, dst)
         cv2.waitKey(1)
-#        cv2.namedWindow("canging", cv2.WINDOW_NORMAL)
-        cv2.imshow("canging", dst)
+#        cv2.namedWindow("changing", cv2.WINDOW_NORMAL)
+        cv2.imshow("changing", dst)
         cv2.waitKey(1)
         print(i)
 #%%
-img = cv2.imread(r"C:\Users\YasmineMnb\Desktop\june exp\200605_flash\original\DSC_0002.JPG")
+img = cv2.imread(r"C:\Users\YasmineMnb\Desktop\june exp\200616_contin\1(L)\Croped_1")
 # =============================================================================
 # def thresh_per_chanel(img, chan, MIN=0 ,MAX=255, win_name = "chanel"):
 #     """try thresholding per RGB chanel"""

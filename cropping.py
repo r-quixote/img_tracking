@@ -11,6 +11,7 @@ def multi_crop_img_lst(ROIs, out_paths, in_path):
     crop all ROIs out of entire list of pictures in the in_path folder
     save them to the out_paths list
     """
+    ## get a list of all the pics in the in_path folder
     pic_lst = [os.path.join(in_path, f_name) for f_name in os.listdir(in_path)]
 
     ## Track how long this takes
@@ -85,7 +86,7 @@ def creat_folder(out_path):
 def main():
     ## Chosse folder to crop
 #    in_path = GUI.filedialog_loop("choose input folder")
-    in_path = r"C:\Users\YasmineMnb\Desktop\june exp\test\origin"
+    in_path = r"C:\Users\YasmineMnb\Desktop\june exp\200623_contin\2\origin"
     pic_lst = [os.path.join(in_path, f_name) for f_name in os.listdir(in_path)]
 
     ## Showing last image of the in_path folder

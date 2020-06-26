@@ -277,7 +277,6 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
             img_procesing.text_on_img(frame_with_box, dt)
 
 
-
             cv2.namedWindow('Tracking', cv2.WINDOW_NORMAL)
             cv2.imshow("Tracking", frame_with_box)
 
@@ -371,10 +370,16 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder,
 #         width_frame = shape_frame[1]
 #         height_frame = shape_frame[0]
 # =============================================================================
-    # Get initial bounding box from user input
+    ## Get initial bounding box from user input
     init_bboxs = get_initial_bounding_boxs(frame)
     cv2.destroyAllWindows()
-    # Initialize MultiTracker
+
+    ## If no ROIs were selected break off
+    if len(init_bboxs) == 0:
+        print("no ROI selected!")
+        return
+
+    ## Initialize MultiTracker
     for tracker_type in tracker_types:
         for bbox in init_bboxs:
             print(tracker_type)
@@ -422,7 +427,12 @@ def run_tracker_wrapper(tracker_types, run_images_from_folder,
                 # Get initial bounding box from user input
                 init_bboxs = get_initial_bounding_boxs(frame)
                 cv2.destroyAllWindows()
-                print(init_bboxs)
+
+                ## If no ROIs were selected break off
+                if len(init_bboxs) == 0:
+                    print("no ROI selected!")
+                    break
+
                 # Re-Initialize MultiTracker
                 for tracker_type in tracker_types:
                     for bbox in init_bboxs:
@@ -450,14 +460,14 @@ def main():
     tracker_type_list = ['CSRT']#, 'KCF']#, 'TLD', 'MEDIANFLOW','MIL', 'MOSSE']
 
     # path with videos or files
-    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\Lineup_10062020_Web2_left_cropped"
+    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\june exp\200618_contin\2\Croped_4"
     output_path = r"Tracked" # only LOCAL file name! not full path
-    object_name = '' # tip name
+    object_name = '_1' # tip name
 
     outfolder = os.path.dirname(video_or_folder_name) + "\\" + output_path
 
     if os.path.isdir(outfolder):
-        print("that folder alrea dy exists! are you sure you want to continue?")
+        print("\nthat folder already exists! are you sure you want to continue?")
         ans = input("y/n? ")
         if ans == "n":
             sys.exit()

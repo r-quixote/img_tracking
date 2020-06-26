@@ -98,7 +98,7 @@ def load_ophir_log_file(file_path = r"C:\Users\YasmineMnb\Desktop\june exp\ophir
             print(line.split("\t"))
             break
     #%%
-    file_path = r"C:\Users\YasmineMnb\Desktop\june exp\ophir_flicker_test\1(L)\200618_2_ophir_testing_flicker_clean_data.txt"
+    file_path = r"C:\Users\YasmineMnb\Desktop\june exp\200624_contin\ophir_clean.txt"
     df = pd.read_csv(file_path, delimiter="\t")
     plt.plot(df[df.columns[0]], df[df.columns[1]])
 
