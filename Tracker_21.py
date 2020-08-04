@@ -460,8 +460,8 @@ def main():
     tracker_type_list = ['CSRT']#, 'KCF']#, 'TLD', 'MEDIANFLOW','MIL', 'MOSSE']
 
     # path with videos or files
-    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\june exp\200618_contin\2\Croped_4"
-    output_path = r"Tracked" # only LOCAL file name! not full path
+    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\june exp\200714_contin\2_L\Croped_1"
+    output_path = r"Tracked_07_12_L" # only LOCAL file name! not full path
     object_name = '_1' # tip name
 
     outfolder = os.path.dirname(video_or_folder_name) + "\\" + output_path
