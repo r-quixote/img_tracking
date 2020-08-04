@@ -50,6 +50,7 @@ This was written to be used with an open terminal/from within spyder
 
 ------------
 **2DO:**
+- [ ] need real distances... maybe from the size of the tube...
 - [X] ~~add tracking for second point in order to track angle between 2 points~~
 - [ ] manual still needs all sorts of work...
     - [X] ~~can't go to manual when tracking multiple points~~
