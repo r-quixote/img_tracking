@@ -213,7 +213,7 @@ def load_image_from_file_or_video(run_images_from_folder, video_files, frame_num
 ## Return initial bounding box from selection
 def get_initial_bounding_boxs(frame):
     ## Muliple trackers:
-    ## Creat a copy of the frame to show selected boxes
+    ## Creat a copy of the frame to show selected bboxes
     show_selected_frame = frame.copy()
     bboxs = []
     while True:
@@ -222,16 +222,14 @@ def get_initial_bounding_boxs(frame):
         if bbox == (0, 0, 0, 0):
             break
         bboxs.append(bbox)
-        # drawing the selected boxes on the copy:
+        # drawing the already selected boxes on the copy:
         for bbox in bboxs:
-            show_selected_frame = cv2.rectangle(show_selected_frame, (bbox[0], bbox[1]), (bbox[0]+bbox[2],bbox[1]+ bbox[3]),
-                                                (50, 50, 200) , 2)
-            show_selected_frame = cv2.line(show_selected_frame, (bbox[0]+int(bbox[2]/2), bbox[1]), (bbox[0]+int(bbox[2]/2), bbox[1]+ bbox[3]),(50, 50, 200),2)
-            show_selected_frame = cv2.line(show_selected_frame, (bbox[0], bbox[1]+int(bbox[3]/2)), (bbox[0]+bbox[2], bbox[1]+int(bbox[3]/2)),(50, 50, 200),2)
-    ## Origin that worked for single tracker!:
-#    cv2.namedWindow("SELECT ROI", cv2.WINDOW_NORMAL)
-#    bbox = cv2.selectROI("SELECT ROI", frame, True)
-#    return bbox
+            x_0,y_0,w,h = bbox[0], bbox[1], bbox[2], bbox[3]
+            frame_color = (50, 50, 200)
+            show_selected_frame = cv2.rectangle(show_selected_frame, (x_0, y_0), (x_0+w,y_0+h),frame_color , 2)
+            show_selected_frame = cv2.line(show_selected_frame, (x_0+int(w/2), y_0), (x_0+int(w/2), y_0+ h),frame_color,2)
+            show_selected_frame = cv2.line(show_selected_frame, (x_0, y_0+int(h/2)), (x_0+w, y_0+int(h/2)),frame_color,2)
+
     return bboxs
 
 def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
@@ -312,7 +310,8 @@ def tracker_loop(frame_to_start, run_images_from_folder, video_files, video,
 def run_tracker_wrapper(tracker_types, run_images_from_folder,
                         video_or_folder_name, frame_to_start,
                         object_name, output_path, first_tiral):
-    """ The function runs a few opencv2 trackers on a video (which has previously been split into frames)
+    """ The function runs a few opencv2 trackers on a video
+    (which has previously been split into frames)
         then it saves a video of the results
 
         Parameters
@@ -460,10 +459,10 @@ def main():
     tracker_type_list = ['CSRT']#, 'KCF']#, 'TLD', 'MEDIANFLOW','MIL', 'MOSSE']
 
     # path with videos or files
-    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\proper_experiments\200805_contin\2_R\Croped_5"
-    output_path = r"Tracked_08_05_R" # only LOCAL file name! not full path
+    video_or_folder_name =  r"C:\Users\YasmineMnb\Desktop\SynologyDrive\proper_experiments\200813_contin\2_R\Croped_2"
+    output_path = r"Tracked_08_13_R" # only LOCAL file name! not full path
     ## tip name
-    object_name = '_5'
+    object_name = '_2'
 
     outfolder = os.path.dirname(video_or_folder_name) + "\\" + output_path
 
