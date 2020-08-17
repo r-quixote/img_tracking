@@ -57,7 +57,7 @@ def multi_crop_img_lst(ROIs, out_paths, in_path):
             print("\n\n!!! You Stoped !!!")
             break
 
-    ## Progress bar to finih...
+    ## Progress bar to finish...
     if k != 27 and k != ord('q'):
         progress_bar.update_progress_bar(1)
         print("\n\nfinished in {} seconds".format(round(time.perf_counter() - t,2)))
@@ -65,9 +65,9 @@ def multi_crop_img_lst(ROIs, out_paths, in_path):
 
 def creat_folder(out_path):
     """
-    checks if the out_path exists,
-    if exists: it will ask if its ok to overwrite
-    if not:    it will create the directory
+    checks if the out_path exists
+    if it exists it will ask if its ok to overwrite
+    if not, it will create the directory
     """
     if os.path.isdir(out_path):
         ans = input("\nHEY!\n output folder already exists.\n \
@@ -75,10 +75,11 @@ def creat_folder(out_path):
         if ans == "":
             print("OK then")
             return out_path
-        n_path = out_path.rsplit('\\', 1)[0] + "\\" + ans
-        creat_folder(n_path)
-        return n_path
-    if not os.path.isdir(out_path):
+        else:
+            n_path = out_path.rsplit('\\', 1)[0] + "\\" + ans
+            creat_folder(n_path)
+            return n_path
+    else:
         os.mkdir(out_path)
         return out_path
 
@@ -86,7 +87,7 @@ def creat_folder(out_path):
 def main():
     ## Chosse folder to crop
 #    in_path = GUI.filedialog_loop("choose input folder")
-    in_path = r"C:\Users\YasmineMnb\Desktop\june exp\200623_contin\2\origin"
+    in_path = r"C:\Users\YasmineMnb\Desktop\SynologyDrive\proper_experiments\200813_contin\1_L\origin"
     pic_lst = [os.path.join(in_path, f_name) for f_name in os.listdir(in_path)]
 
     ## Showing last image of the in_path folder
