@@ -4,7 +4,7 @@ import os
 
 import progress_bar
 import img_procesing
-from GUI import GUI
+
 
 def multi_crop_img_lst(ROIs, out_paths, in_path):
     """
@@ -86,7 +86,6 @@ def creat_folder(out_path):
 
 def main():
     ## Chosse folder to crop
-#    in_path = GUI.filedialog_loop("choose input folder")
     in_path = r"C:\Users\YasmineMnb\Desktop\SynologyDrive\proper_experiments\200813_contin\1_L\origin"
     pic_lst = [os.path.join(in_path, f_name) for f_name in os.listdir(in_path)]
 
@@ -120,6 +119,7 @@ def main():
 
 if __name__ == "__main__":
     try:
+        ## yeah... you should not do this - but i did cause open windows are annoying
         main()
     finally:
         cv2.destroyAllWindows()
