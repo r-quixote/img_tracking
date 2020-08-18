@@ -81,15 +81,22 @@ def get_orig_path(file_path):
 
 
 def get_time(file_path):
+    """
+    still a bit shaky - ment to get the creation time from the output of the
+    labs nikon camera files - not for raspberry PI cams/webcams/other formats
+    """
     if "CROPED" in file_path:
         file_path = get_orig_path(file_path)
-        if file_path == "ERROR":
+        if file_path == "EEROR":
+            print("Croped in file name!")
             return("path time not found")
-
-    if not os.path.isfile(file_path):
-        return("path time not found")
     STAT = os.stat(file_path)
-    return time.strftime('%d-%m %H:%M', time.localtime(STAT[ST_MTIME]))
+    try:
+        creat_time = time.strftime('%d-%m %H:%M', time.localtime(STAT[ST_MTIME]))
+    except:
+        print("there was an error getting the creation time")
+        return("path time not found")
+    return creat_time
 
 
 def get_time_delta(str_img_time, cur_img_time):
