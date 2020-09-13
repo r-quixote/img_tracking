@@ -71,9 +71,10 @@ This was written to be used with an open terminal/from within spyder
 - [ ] add brightness controll to img_procesing.py - maybe auto brightness correction for imgs with natural lighting
 - [ ] clean up progress bar mess
 - [ ] add help section for img_procesing
-- [ ] cropping several parts in cropping.py
-    - [X] cropping several parts
-    - [ ] uneficient! should only open every img once - currently opens as many times as there are ROIs
+- [X] ~~cropping several parts in cropping.py~~
+    - [X] ~~cropping several parts~~
+    - [X] ~~uneficient! should only open every img once - currently opens as many times as there are ROIs~~
+- [ ] while cropping copy file data (date taken, focal lenght, exposure, etc...)
 
 
 
