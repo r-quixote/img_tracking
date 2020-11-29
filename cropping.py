@@ -1,14 +1,15 @@
 """
-replace progress bar with tqdm!
+would be cool to add threading here
 """
-
 import time
 import cv2
 import os
+from tqdm import tqdm as tq
 
-import progress_bar
 import img_procesing
 from GUI import GUI
+
+
 
 def multi_crop_img_lst(ROIs, out_paths, in_path):
     """
@@ -18,17 +19,16 @@ def multi_crop_img_lst(ROIs, out_paths, in_path):
     ## get a list of all the pics in the in_path folder
     pic_lst = [os.path.join(in_path, f_name) for f_name in os.listdir(in_path)]
 
-    ## Track how long this takes
-    t = time.perf_counter()
 
-    for i, full_pic_path in enumerate(pic_lst):
+
+    for full_pic_path in tq(pic_lst):
         ## Create new file name for the croped img
         pic_name = full_pic_path.rsplit("\\", 1)[-1]
         new_pic_name = pic_name.strip(".JPG").strip("DSC_")+"_CROPED.jpg"
 
-        ## Progress bar
-        perc = (i/len(pic_lst))
-        progress_bar.update_progress_bar(perc)
+#        ## Progress bar
+#        perc = (i/len(pic_lst))
+#        progress_bar.update_progress_bar(perc)
 
         ## Load img
         img = cv2.imread(full_pic_path)
@@ -39,7 +39,7 @@ def multi_crop_img_lst(ROIs, out_paths, in_path):
             x, y, w, h = ROI[0], ROI[1], ROI[2], ROI[3]
             croped_img = img[y:y+h, x:x+w]
 
-# ========= if anything should be done with imgs enter code here ==============
+# ========= if anything should be done with imgs add code here ==============
 #            rtd = img_procesing.rotate_img(croped_img,180)
 # =============================================================================
 
@@ -60,13 +60,6 @@ def multi_crop_img_lst(ROIs, out_paths, in_path):
         if k == 27 or k == ord('q'):
             print("\n\n!!! You Stoped !!!")
             break
-
-    ## Progress bar to finish...
-    if k != 27 and k != ord('q'):
-        progress_bar.update_progress_bar(1)
-        print("\n\nfinished in {}s ({} minutes)".format(round(time.perf_counter() - t),round((time.perf_counter() - t)/60,2)))
-
-
 
 def creat_folder(out_path):
     """
@@ -170,7 +163,7 @@ def creat_folder(out_path):
 def main():
     ## Chosse folder to crop
 #    in_path = GUI.filedialog_loop("choose input folder")
-    in_path = r"C:\Users\YasmineMnb\Desktop\transfer folder\201123_contin_low\1_R\origin"
+    in_path = r"C:\Users\YasmineMnb\Desktop\transfer folder\201123_contin_low\1_R\origin_dark"
     pic_lst = [os.path.join(in_path, f_name) for f_name in os.listdir(in_path)]
 
     ## Showing last image of the in_path folder
@@ -206,7 +199,14 @@ def main():
             out_path = creat_folder(out_path)
             out_paths.append(out_path)
 
+        ## Track how long this takes overall
+        t = time.perf_counter()
+
+        ## Run the cropping
         multi_crop_img_lst(ROIs, out_paths, in_path)
+
+        ## Print how long it took
+        print("\n\nfinished in {}s ({} minutes)".format(round(time.perf_counter() - t),round((time.perf_counter() - t)/60,2)))
 
 if __name__ == "__main__":
     try:
